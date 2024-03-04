@@ -31,14 +31,15 @@
       </div>
     </div>
   </div>
+
   <Vue3MultiStepper
     v-model:step="step"
     :tabs="tabs"
     primaryColor1="#79031D"
     primaryColor2="#F2E6E8"
-    backText="Go Back"
-    x="Next"
-    doneText="Finish"
+    backText="Kembali"
+    nextText="Lanjut"
+    doneText="Selesai"
     :loading="loading"
     :finalize="handleFormSubmission"
     :validateStep="validateStep"
@@ -69,7 +70,7 @@
       </div>
 
       <div class="form-group">
-        <label for="alamat">Alamat</label>
+        <label for="alamat">Alamat Berdasarkan KTP</label>
         <textarea id="alamat" v-model="alamat" class="form-control"></textarea>
       </div>
 
@@ -252,6 +253,164 @@
 
     <template #2
       ><!-- Step 2 Content -->
+      <!-- RIWAYAT PENDIDIKAN -->
+      <div id="app">
+        <h2>Riwayat Pendidikan Formal</h2>
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th rowspan="2">Tingkat</th>
+                <th rowspan="2">Nama Sekolah</th>
+                <th rowspan="2">Tempat/Kota</th>
+                <th rowspan="2">Jurusan</th>
+                <th colspan="2">Tahun</th>
+                <th rowspan="2">Status Kelulusan</th>
+              </tr>
+              <tr>
+                <th>Dari</th>
+                <th>Sampai</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SD</td>
+                <td><input type="text" v-model="sd.namasekolah" /></td>
+                <td><input type="text" v-model="sd.tempatsekolah" /></td>
+                <td><input type="text" v-model="sd.jurusan" /></td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="sd.tahunDari"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="sd.tahunSampai"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <select v-model="sd.statuskelulusan">
+                    <option value="Lulus">Lulus</option>
+                    <option value="Tidak">Tidak Lulus</option>
+                    <option value="Belum">Belum Lulus</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>SMP</td>
+                <td><input type="text" v-model="smp.namasekolah" /></td>
+                <td><input type="text" v-model="smp.tempatsekolah" /></td>
+                <td><input type="text" v-model="smp.jurusan" /></td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="smp.tahunDari"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="smp.tahunSampai"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <select v-model="smp.statuskelulusan">
+                    <option value="Lulus">Lulus</option>
+                    <option value="Tidak">Tidak Lulus</option>
+                    <option value="Belum">Belum Lulus</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>SMA</td>
+                <td><input type="text" v-model="sma.namasekolah" /></td>
+                <td><input type="text" v-model="sma.tempatsekolah" /></td>
+                <td><input type="text" v-model="sma.jurusan" /></td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="sma.tahunDari"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="sma.tahunSampai"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <select v-model="sma.statuskelulusan">
+                    <option value="Lulus">Lulus</option>
+                    <option value="Tidak">Tidak Lulus</option>
+                    <option value="Belum">Belum Lulus</option>
+                  </select>
+                </td>
+              </tr>
+              <tr v-for="(kuliah, index) in kuliah" :key="index">
+                <td>Kuliah</td>
+                <td><input type="text" v-model="kuliah.namasekolah" /></td>
+                <td><input type="text" v-model="kuliah.tempatsekolah" /></td>
+                <td>
+                  <input
+                    type="text"
+                    v-model="kuliah.jurusan"
+                    placeholder="Contoh: S1 Akuntansi"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="kuliah.tahunDari"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    v-model="kuliah.tahunSampai"
+                    style="width: 50px"
+                  />
+                </td>
+                <td>
+                  <select v-model="kuliah.statuskelulusan">
+                    <option value="Lulus">Lulus</option>
+                    <option value="Tidak">Tidak Lulus</option>
+                    <option value="Belum">Belum Lulus</option>
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <button class="tambah-kuliah" @click.stop="tambahKuliah()">
+                    +
+                  </button>
+                </td>
+                <td>
+                  <button @click.stop="hapusKuliah(index)" class="hapus-kuliah">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SUSUNAN KELUARGA -->
       <div id="app">
         <h2>Formulir Susunan Keluarga</h2>
 
@@ -259,14 +418,14 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Hubungan Keluarga</th>
-                <th>Nama</th>
-                <th>Jenis Kelamin</th>
-                <th>Tanggal Lahir</th>
-                <th>Pendidikan Terakhir</th>
-                <th>Perusahaan Terakhir</th>
-                <th>Jabatan Terakhir</th>
-                <th>Keterangan</th>
+                <th rowspan="2">Hubungan Keluarga</th>
+                <th rowspan="2">Nama</th>
+                <th rowspan="2">Jenis Kelamin</th>
+                <th rowspan="2">Tanggal Lahir</th>
+                <th rowspan="2">Pendidikan Terakhir</th>
+                <th rowspan="2">Perusahaan Terakhir</th>
+                <th rowspan="2">Jabatan Terakhir</th>
+                <th rowspan="2">Keterangan</th>
               </tr>
             </thead>
             <tbody>
@@ -315,12 +474,15 @@
 
               <tr>
                 <td>
-                  <button class="tambah-saudara" @click="tambahSaudara()">
+                  <button class="tambah-saudara" @click.stop="tambahSaudara()">
                     +
                   </button>
                 </td>
                 <td>
-                  <button @click="hapusSaudara(index)" class="hapus-saudara">
+                  <button
+                    @click.stop="hapusSaudara(index)"
+                    class="hapus-saudara"
+                  >
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>
@@ -351,14 +513,14 @@
                 <td>
                   <button
                     class="tambah-anak"
-                    @click="tambahAnak()"
+                    @click.stop="tambahAnak()"
                     placeholder="Anak"
                   >
                     +
                   </button>
                 </td>
                 <td>
-                  <button @click="hapusAnak(index)" class="hapus-anak">
+                  <button @click.stop="hapusAnak(index)" class="hapus-anak">
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>
@@ -371,8 +533,29 @@
               </tr>
             </tbody>
           </table>
-        </div></div
-    ></template>
+        </div>
+      </div>
+
+      <!-- KURSUS/TRAINING -->
+      <div id="app">
+        <h2>Formulir Kursus/Training</h2>
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th rowspan="2">Bidang/Jenis</th>
+                <th rowspan="2">Penyelenggara</th>
+                <th rowspan="2">Lokasi</th>
+                <th rowspan="2">Lama Kursus</th>
+                <th rowspan="2">Tahun</th>
+                <th rowspan="2">Dibiayai oleh</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </template>
     <template #3><!-- Step 3 Content --></template>
     <template #4><!-- Step 4 Content --></template>
     <template #5><!-- Step 5 Content --></template>

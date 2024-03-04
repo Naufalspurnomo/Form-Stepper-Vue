@@ -49,15 +49,19 @@ export default {
         ];
       }),
       ayah: {
-        hubungan: "Ayah",
+        hubungan: "Ayah (Kandung/Tiri)",
         nama: "",
       },
       ibu: {
-        hubungan: "Ibu",
+        hubungan: "Ibu (Kandung/Tiri)",
         nama: "",
       },
       saudara: [],
       anak: [],
+      sd: [],
+      smp: [],
+      sma: [],
+      kuliah: [],
       name: "UseDropzoneDemo",
       active: false,
       uploadedImageUrl: null,
@@ -78,7 +82,16 @@ export default {
     toggleActive() {
       this.active = !this.active;
     },
-
+    scrollToTop() {
+      const scrollStep = window.scrollY / 20;
+      const scrollInterval = setInterval(() => {
+        if (window.scrollY !== 0) {
+          window.scrollBy(0, -scrollStep);
+        } else {
+          clearInterval(scrollInterval);
+        }
+      }, 15);
+    },
     handleFileSelect(event) {
       const file = event.target.files[0];
       const reader = new FileReader();
@@ -90,8 +103,7 @@ export default {
       reader.readAsDataURL(file);
     },
     validateStep(step) {
-      // Perform validation based on the current step
-      // Return true if the step is valid, otherwise return false
+      this.scrollToTop();
       if (step === 1) {
         return this.step1Check();
       } else if (step === 2) {
@@ -103,9 +115,9 @@ export default {
       } else if (step === 5) {
         return this.step5Check();
       }
-
-      return true; // Default to true if no validation is implemented
+      return true;
     },
+
     focusOnInput() {
       if (this.status_rumah_tinggal === "Lainnya") {
         this.$nextTick(() => {
@@ -113,21 +125,6 @@ export default {
         });
       }
     },
-
-    /* <<<CHECKER FUNCTIONS>>>
-     * These functions are responsible for performing a check or validation and returning a boolean value.
-     * If the returned value is `true`, it indicates that the check has passed successfully, allowing the code to proceed to the next step in the JavaScript execution flow.
-     *
-     * This function is commonly used in multi-step processes or conditional branching scenarios. It helps determine whether the conditions required for the next step to be executed have been met.
-     *
-     * The implementation details of the check performed in each function may vary depending on the specific requirements of the software being developed. It could involve verifying certain data, validating user input, or checking the state of the application.
-     *
-     * Upon receiving a `true` result from the function, the calling code can safely proceed to execute the subsequent steps or perform further actions. If `false` is returned, it indicates that the check failed, and appropriate actions can be taken to handle the failed condition.
-     *
-     * It is important to note that this function plays a crucial role in determining whether the code can progress to the next step based on the successful completion of a specific check or condition.
-     *
-     * @returns {boolean} - `true` if the check succeeds, allowing the code to proceed to the next step; `false` if the check fails, indicating the need for alternative actions.
-     */
 
     step1Check() {
       return true;
@@ -176,6 +173,16 @@ export default {
     },
     hapusAnak(index) {
       this.anak.splice(index, 1);
+    },
+    tambahKuliah() {
+      this.kuliah.push({
+        nama_sekolah: "",
+        tempatkota: "",
+        jurusan: "",
+      });
+    },
+    hapusKuliah(index) {
+      this.kuliah.splice(index, 1);
     },
   },
   setup() {
