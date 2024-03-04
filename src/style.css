@@ -228,21 +228,19 @@ button {
 button:hover {
   background-color: #ddd;
 }
-
 input[type="text"],
 input[type="number"],
 input[type="date"] {
-  border-color: #ccc;
-  background-color: #fff;
+  border: 1px solid #ccc;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
 }
 select {
   border-color: #ccc;
   background-color: #fff;
-  appearance: none;
   background-image: url("./assets/down\ arrow\ icon_4184901.png");
-  background-repeat: no-repeat;
   background-position: right 10px top 50%;
-  background-size: 10px;
 }
 
 select:hover {
@@ -334,10 +332,12 @@ input[type="file"] {
   border-radius: 3px;
   box-sizing: border-box;
 }
-
 .tambah-saudara,
 .tambah-anak,
-.tambah-kuliah {
+.tambah-kuliah,
+.tambah-kursus,
+.tambah-bahasa,
+.tambah-sosial {
   padding: 5px 10px;
   font-size: 14px;
   background-color: #0056b3;
@@ -346,14 +346,10 @@ input[type="file"] {
   border-radius: 3px;
   cursor: pointer;
 }
-.hapus-saudara,
-.hapus-anak,
-.hapus-kuliah {
+.hapus {
   background-color: red;
 }
-.hapus-anak i,
-.hapus-saudara i,
-.hapus-kuliah i {
+.hapus i {
   font-size: 12px;
   color: #ffffff;
 }
@@ -368,5 +364,17 @@ input[type="file"] {
 }
 .tambah-kuliah::after {
   content: "Kuliah";
+  color: rgb(255, 255, 255);
+}
+.tambah-kursus::after {
+  content: "Kursus";
+  color: rgb(255, 255, 255);
+}
+.tambah-bahasa::after {
+  content: "Bahasa";
+  color: rgb(255, 255, 255);
+}
+.tambah-sosial::after {
+  content: "Kegiatan Sosial";
   color: rgb(255, 255, 255);
 }

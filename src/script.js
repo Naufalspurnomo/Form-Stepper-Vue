@@ -62,6 +62,9 @@ export default {
       smp: [],
       sma: [],
       kuliah: [],
+      kursus: [],
+      bahasa: [],
+      sosial: [],
       name: "UseDropzoneDemo",
       active: false,
       uploadedImageUrl: null,
@@ -156,8 +159,8 @@ export default {
         keterangan: "",
       });
     },
-    hapusSaudara(index) {
-      this.saudara.splice(index, 1);
+    hapusSaudara() {
+      this.saudara.pop();
     },
     tambahAnak() {
       this.anak.push({
@@ -171,8 +174,8 @@ export default {
         keterangan: "",
       });
     },
-    hapusAnak(index) {
-      this.anak.splice(index, 1);
+    hapusAnak() {
+      this.anak.pop();
     },
     tambahKuliah() {
       this.kuliah.push({
@@ -181,15 +184,52 @@ export default {
         jurusan: "",
       });
     },
-    hapusKuliah(index) {
-      this.kuliah.splice(index, 1);
+    hapusKuliah() {
+      this.kuliah.pop();
+    },
+    tambahKursus() {
+      this.kursus.push({
+        bidang: "",
+        penyelenggara: "",
+        lokasi: "",
+        lama: "",
+        tahun: "",
+        biaya: "",
+      });
+    },
+    hapusKursus() {
+      this.kursus.pop();
+    },
+    tambahBahasa() {
+      this.bahasa.push({
+        macambahasa: "Bahasa",
+        membaca: "",
+        menulis: "",
+        mendengar: "",
+        berbicara: "",
+      });
+    },
+    hapusBahasa() {
+      this.bahasa.pop();
+    },
+    tambahSosial() {
+      this.sosial.push({
+        organisasi: "",
+        kegiatan: "",
+        jabatan: "",
+        tahun: "",
+        keterangan: "",
+      });
+    },
+    hapusSosial() {
+      this.sosial.pop();
     },
   },
   setup() {
-    const dropzoneFile = ""; // Atur penyimpanan untuk data file
+    const dropzoneFile = "";
 
     function onDrop(acceptedFiles) {
-      dropzoneFile.value = acceptedFiles[0]; // Perbarui state dengan file yang diterima
+      dropzoneFile.value = acceptedFiles[0];
     }
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });

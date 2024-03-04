@@ -395,7 +395,7 @@
                   </button>
                 </td>
                 <td>
-                  <button @click.stop="hapusKuliah(index)" class="hapus-kuliah">
+                  <button @click.stop="hapusKuliah(index)" class="hapus">
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>
@@ -412,7 +412,7 @@
 
       <!-- SUSUNAN KELUARGA -->
       <div id="app">
-        <h2>Formulir Susunan Keluarga</h2>
+        <h2>Susunan Keluarga</h2>
 
         <div class="table-responsive">
           <table class="table table-bordered">
@@ -479,10 +479,7 @@
                   </button>
                 </td>
                 <td>
-                  <button
-                    @click.stop="hapusSaudara(index)"
-                    class="hapus-saudara"
-                  >
+                  <button @click.stop="hapusSaudara(index)" class="hapus">
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>
@@ -520,7 +517,7 @@
                   </button>
                 </td>
                 <td>
-                  <button @click.stop="hapusAnak(index)" class="hapus-anak">
+                  <button @click.stop="hapusAnak(index)" class="hapus">
                     <i class="fas fa-trash"></i>
                   </button>
                 </td>
@@ -538,7 +535,7 @@
 
       <!-- KURSUS/TRAINING -->
       <div id="app">
-        <h2>Formulir Kursus/Training</h2>
+        <h2>Kursus/Training</h2>
 
         <div class="table-responsive">
           <table class="table table-bordered">
@@ -552,9 +549,180 @@
                 <th rowspan="2">Dibiayai oleh</th>
               </tr>
             </thead>
+
+            <tbody>
+              <tr v-for="(kursus, index) in kursus" :key="index">
+                <td><input type="text" v-model="kursus.bidang" /></td>
+                <td><input type="text" v-model="kursus.penyelenggara" /></td>
+                <td><input type="text" v-model="kursus.lokasi" /></td>
+                <td><input type="text" v-model="kursus.lama" /></td>
+                <td><input type="number" v-model="kursus.tahun" /></td>
+                <td><input type="text" v-model="kursus.biaya" /></td>
+              </tr>
+            </tbody>
+
+            <tr>
+              <td>
+                <button
+                  class="tambah-kursus"
+                  @click.stop="tambahKursus()"
+                  placeholder="Kursus"
+                >
+                  +
+                </button>
+              </td>
+              <td>
+                <button @click.stop="hapusKursus(index)" class="hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
           </table>
         </div>
       </div>
+
+      <!-- PENGETAHUAN BAHASA -->
+      <div id="app">
+        <h2>Pengetahuan Bahasa</h2>
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th rowspan="2">Macam</th>
+                <th rowspan="2">Membaca</th>
+                <th rowspan="2">Menulis</th>
+                <th rowspan="2">Mendengar</th>
+                <th rowspan="2">Berbicara</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="(bahasa, index) in bahasa" :key="index">
+                <td>
+                  <select v-model="bahasa.macambahasa">
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Inggris">Inggris</option>
+                    <option value="Jepang">Jepang</option>
+                    <option value="Mandarin">Mandarin</option>
+                    <option value="Arab">Arab</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.membaca">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.menulis">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.mendengar">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.berbicara">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+              </tr>
+            </tbody>
+
+            <tr>
+              <td>
+                <button
+                  class="tambah-bahasa"
+                  @click.stop="tambahBahasa()"
+                  placeholder="Bahasa"
+                >
+                  +
+                </button>
+              </td>
+              <td>
+                <button @click.stop="hapusBahasa(index)" class="hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- KEGIATAN SOSIAL -->
+      <div id="app">
+        <h2>Kegiatan Sosial</h2>
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th rowspan="2">Organisasi</th>
+                <th rowspan="2">Macam Kegiatan</th>
+                <th rowspan="2">Jabatan</th>
+                <th rowspan="2">Tahun</th>
+                <th rowspan="2">Keterangan</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="(sosial, index) in sosial" :key="index">
+                <td><input type="text" v-model="sosial.organisasi" /></td>
+                <td><input type="text" v-model="sosial.kegiatan" /></td>
+                <td><input type="text" v-model="sosial.jabatan" /></td>
+                <td><input type="number" v-model="sosial.tahun" /></td>
+                <td><input type="text" v-model="sosial.keterangan" /></td>
+              </tr>
+            </tbody>
+
+            <tr>
+              <td>
+                <button
+                  class="tambah-sosial"
+                  @click.stop="tambahSosial()"
+                  placeholder="Sosial"
+                >
+                  +
+                </button>
+              </td>
+              <td>
+                <button @click.stop="hapusSosial(index)" class="hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hobi">Hobi Dan Kegiatan Waktu Luang</label>
+        <textarea id="hobi" v-model="hobi" class="form-control"></textarea>
+      </div>
+
+      <!--  -->
+      <!--  -->
+      <!--  -->
     </template>
     <template #3><!-- Step 3 Content --></template>
     <template #4><!-- Step 4 Content --></template>
