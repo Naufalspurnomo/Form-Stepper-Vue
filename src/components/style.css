@@ -44,7 +44,7 @@ a {
   height: 800px;
   position: absolute;
   transform: translateZ(0);
-  background: #1b2030 url("./assets/SANQUA-2.jpg") 100% 0 no-repeat;
+  background: #1b2030 url("../assets/SANQUA-2.jpg") 100% 0 no-repeat;
   background-size: 100%;
   animation: grow 25s linear 10ms infinite;
   transition: all 0.4s ease-in-out;
@@ -177,7 +177,11 @@ a {
 .steppy {
   margin: 50px 100px;
 }
-
+.container-form {
+  display: flex;
+  flex-direction: column;
+  margin: 30px 10px;
+}
 .form-group {
   align-items: center;
   margin: 25px 0;
@@ -207,7 +211,13 @@ textarea {
 }
 
 textarea {
-  height: 100px;
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-size: 16px;
+  resize: none;
 }
 select {
   appearance: none;
@@ -239,7 +249,7 @@ input[type="date"] {
 select {
   border-color: #ccc;
   background-color: #fff;
-  background-image: url("./assets/down\ arrow\ icon_4184901.png");
+  background-image: url("../assets/down\ arrow\ icon_4184901.png");
   background-position: right 10px top 50%;
 }
 
@@ -377,4 +387,24 @@ input[type="file"] {
 .tambah-sosial::after {
   content: "Kegiatan Sosial";
   color: rgb(255, 255, 255);
+}
+.container-hobi {
+  margin: 0 auto;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.table-hobi {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-hobi td,
+.table-hobi th {
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+.table-hobi th {
+  text-align: center;
 }
