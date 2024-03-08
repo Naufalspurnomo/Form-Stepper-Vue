@@ -1,57 +1,9 @@
-<template>
-  <div>
-    <div class="header">
-      <div class="main-header">
-        <div class="logo">
-          <img src="../assets/pt_sanqua_cover.jpg" alt="Logo" />
-          <img src="../assets/pt_sanqu_cover2.jpg" alt="Logo" />
-        </div>
-        <div class="login">
-          <a v-if="isLoggedIn">
-            <img src="../assets/user.png" alt="User" />
-            <span @click="toggleDropdown">
-              {{ userEmail }}
-              <template v-if="showDropdown">
-                <button @click.prevent="logout">Keluar</button>
-              </template>
-            </span>
-          </a>
-
-          <router-link v-else :to="{ name: 'Login' }">Masuk Akun</router-link>
-        </div>
-      </div>
-      <!-- <div class="sides" id="logoSide">
-            <img src="./assets/pt_sanqua_cover.jpg" alt="Logo Website" />
-          </div> -->
-      <!-- <div class="sides" id="menuSide">
-            <a href="#" class="menu"> </a>
-            <div class="dropdown-content">
-              <a href="#">Menu 1</a>
-              <a href="#">Menu 2</a>
-              <a href="#">Menu 3</a>
-            </div>
-          </div> -->
-      <div class="info">
-        <h1><a href="#category">PT. SanQua</a></h1>
-        <h2>PEREKRUTAN KARYAWAN</h2>
-      </div>
-    </div>
-  </div>
-
-  <Vue3MultiStepper
-    v-model:step="step"
-    :tabs="tabs"
-    primaryColor1="#79031D"
-    primaryColor2="#F2E6E8"
-    backText="Kembali"
-    nextText="Lanjut"
-    doneText="Selesai"
-    :loading="loading"
-    :finalize="handleFormSubmission"
-    :validateStep="validateStep"
-  >
-    <template #1
-      ><!-- Step 1 Content -->
+<template #5 v-if="step === 5">
+  <div id="app">
+    <h1>Validasi Jawaban</h1>
+    <p>Berikut adalah ringkasan jawaban Anda:</p>
+    <div class="container-validation">
+      <!-- Step 1 Content -->
       <div class="container-form">
         <h2>Data Diri</h2>
         <div class="form-group">
@@ -90,7 +42,6 @@
             id="telepon"
             v-model="telepon"
             class="form-control"
-            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
           />
         </div>
 
@@ -132,16 +83,12 @@
 
         <div class="form-group">
           <label for="kebangsaan">Kebangsaan</label>
-          <select id="kebangsaan" v-model="kebangsaan" class="form-control">
-            <option value="">Pilih Kebangsaan (Ketik Negara)</option>
-            <option
-              v-for="negara in countries"
-              :value="negara.alpha2Code"
-              :key="negara.alpha2Code"
-            >
-              {{ negara.name }}
-            </option>
-          </select>
+          <input
+            type="text"
+            id="kebangsaan"
+            v-model="kebangsaan"
+            class="form-control"
+          />
         </div>
 
         <div class="form-group">
@@ -268,9 +215,8 @@
           />
         </div>
       </div>
-    </template>
 
-    <template #2>
+      <!-- Step 2 Content -->
       <div class="container-form">
         <!-- Step 2 Content -->
         <!-- RIWAYAT PENDIDIKAN -->
@@ -294,50 +240,118 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(pendidikan, index) in pendidikan" :key="index">
+                <tr>
+                  <td>SD</td>
+                  <td><input type="text" v-model="sd.namasekolah" /></td>
+                  <td><input type="text" v-model="sd.tempatsekolah" /></td>
+                  <td><input type="text" v-model="sd.jurusan" /></td>
                   <td>
-                    <select v-model="pendidikan.tingkat">
-                      <option value="SD/Sederajat">SD/Sederajat</option>
-                      <option value="SMP/Sederajat">SMP/Sederajat</option>
-                      <option value="SMA/Sederajat">SMA/Sederajat</option>
-                      <option value="D1">D1</option>
-                      <option value="D2">D2</option>
-                      <option value="D3">D3</option>
-                      <option value="S1">S1</option>
-                      <option value="S2">S2</option>
-                      <option value="S3">S3</option>
+                    <input
+                      type="number"
+                      v-model="sd.tahunDari"
+                      style="width: 50px"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      v-model="sd.tahunSampai"
+                      style="width: 50px"
+                    />
+                  </td>
+                  <td>
+                    <select v-model="sd.statuskelulusan">
+                      <option value="Lulus">Lulus</option>
+                      <option value="Tidak">Tidak Lulus</option>
+                      <option value="Belum">Belum Lulus</option>
                     </select>
                   </td>
-
+                </tr>
+                <tr>
+                  <td>SMP</td>
+                  <td><input type="text" v-model="smp.namasekolah" /></td>
+                  <td><input type="text" v-model="smp.tempatsekolah" /></td>
+                  <td><input type="text" v-model="smp.jurusan" /></td>
                   <td>
-                    <input type="text" v-model="pendidikan.namasekolah" />
+                    <input
+                      type="number"
+                      v-model="smp.tahunDari"
+                      style="width: 50px"
+                    />
                   </td>
                   <td>
-                    <input type="text" v-model="pendidikan.tempatsekolah" />
+                    <input
+                      type="number"
+                      v-model="smp.tahunSampai"
+                      style="width: 50px"
+                    />
+                  </td>
+                  <td>
+                    <select v-model="smp.statuskelulusan">
+                      <option value="Lulus">Lulus</option>
+                      <option value="Tidak">Tidak Lulus</option>
+                      <option value="Belum">Belum Lulus</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>SMA</td>
+                  <td><input type="text" v-model="sma.namasekolah" /></td>
+                  <td><input type="text" v-model="sma.tempatsekolah" /></td>
+                  <td><input type="text" v-model="sma.jurusan" /></td>
+                  <td>
+                    <input
+                      type="number"
+                      v-model="sma.tahunDari"
+                      style="width: 50px"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      v-model="sma.tahunSampai"
+                      style="width: 50px"
+                    />
+                  </td>
+                  <td>
+                    <select v-model="sma.statuskelulusan">
+                      <option value="Lulus">Lulus</option>
+                      <option value="Tidak">Tidak Lulus</option>
+                      <option value="Belum">Belum Lulus</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr v-for="(kuliah, index) in kuliah" :key="index">
+                  <td>Kuliah</td>
+                  <td>
+                    <input type="text" v-model="kuliah.namasekolah" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="kuliah.tempatsekolah" />
                   </td>
                   <td>
                     <input
                       type="text"
-                      v-model="pendidikan.jurusan"
-                      placeholder=""
+                      v-model="kuliah.jurusan"
+                      placeholder="Contoh: S1 Akuntansi"
                     />
                   </td>
                   <td>
                     <input
                       type="number"
-                      v-model="pendidikan.tahunDari"
+                      v-model="kuliah.tahunDari"
                       style="width: 50px"
                     />
                   </td>
                   <td>
                     <input
                       type="number"
-                      v-model="pendidikan.tahunSampai"
+                      v-model="kuliah.tahunSampai"
                       style="width: 50px"
                     />
                   </td>
                   <td>
-                    <select v-model="pendidikan.statuskelulusan">
+                    <select v-model="kuliah.statuskelulusan">
                       <option value="Lulus">Lulus</option>
                       <option value="Tidak">Tidak Lulus</option>
                       <option value="Belum">Belum Lulus</option>
@@ -346,13 +360,10 @@
                 </tr>
                 <tr>
                   <td>
-                    <button
-                      class="tambah-pendidikan"
-                      @click.stop="tambahPendidikan()"
-                    >
+                    <button class="tambah-kuliah" @click.stop="tambahKuliah()">
                       +
                     </button>
-                    <button @click.stop="hapusPendidikan()" class="hapus">
+                    <button @click.stop="hapusKuliah(index)" class="hapus">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -381,38 +392,112 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(keluarga, index) in keluarga" :key="index">
-                  <td><input type="text" v-model="keluarga.hubungan" /></td>
-                  <td><input type="text" v-model="keluarga.nama" /></td>
+                <tr>
+                  <td><input type="text" v-model="ayah.hubungan" /></td>
+                  <td><input type="text" v-model="ayah.nama" /></td>
                   <td>
-                    <input type="text" v-model="keluarga.jenis_kelamin" />
+                    <input type="text" v-model="ayah.jenis_kelamin" />
                   </td>
                   <td>
-                    <input type="date" v-model="keluarga.tanggal_lahir" />
+                    <input type="date" v-model="ayah.tanggal_lahir" />
                   </td>
                   <td>
-                    <input type="text" v-model="keluarga.pendidikan_terakhir" />
+                    <input type="text" v-model="ayah.pendidikan_terakhir" />
                   </td>
                   <td>
-                    <input type="text" v-model="keluarga.perusahaan_terakhir" />
+                    <input type="text" v-model="ayah.perusahaan_terakhir" />
                   </td>
                   <td>
-                    <input type="text" v-model="keluarga.jabatan_terakhir" />
+                    <input type="text" v-model="ayah.jabatan_terakhir" />
+                  </td>
+                  <td><input type="text" v-model="ayah.keterangan" /></td>
+                </tr>
+
+                <tr>
+                  <td><input type="text" v-model="ibu.hubungan" /></td>
+                  <td><input type="text" v-model="ibu.nama" /></td>
+                  <td><input type="text" v-model="ibu.jenis_kelamin" /></td>
+                  <td><input type="date" v-model="ibu.tanggal_lahir" /></td>
+                  <td>
+                    <input type="text" v-model="ibu.pendidikan_terakhir" />
                   </td>
                   <td>
-                    <input type="text" v-model="keluarga.keterangan" />
+                    <input type="text" v-model="ibu.perusahaan_terakhir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="ibu.jabatan_terakhir" />
+                  </td>
+                  <td><input type="text" v-model="ibu.keterangan" /></td>
+                </tr>
+
+                <tr v-for="(saudara, index) in saudara" :key="index">
+                  <td><input type="text" v-model="saudara.hubungan" /></td>
+                  <td><input type="text" v-model="saudara.nama" /></td>
+                  <td>
+                    <input type="text" v-model="saudara.jenis_kelamin" />
+                  </td>
+                  <td>
+                    <input type="date" v-model="saudara.tanggal_lahir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="saudara.pendidikan_terakhir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="saudara.perusahaan_terakhir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="saudara.jabatan_terakhir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="saudara.keterangan" />
                   </td>
                 </tr>
 
                 <tr>
                   <td>
                     <button
-                      class="tambah-keluarga"
-                      @click.stop="tambahKeluarga()"
+                      class="tambah-saudara"
+                      @click.stop="tambahSaudara()"
                     >
                       +
                     </button>
-                    <button @click.stop="hapusKeluarga()" class="hapus">
+                    <button @click.stop="hapusSaudara(index)" class="hapus">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+
+                <tr v-for="(anak, index) in anak" :key="index">
+                  <td><input type="text" v-model="anak.hubungan" /></td>
+                  <td><input type="text" v-model="anak.nama" /></td>
+                  <td>
+                    <input type="text" v-model="anak.jenis_kelamin" />
+                  </td>
+                  <td>
+                    <input type="date" v-model="anak.tanggal_lahir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="anak.pendidikan_terakhir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="anak.perusahaan_terakhir" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="anak.jabatan_terakhir" />
+                  </td>
+                  <td><input type="text" v-model="anak.keterangan" /></td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <button
+                      class="tambah-anak"
+                      @click.stop="tambahAnak()"
+                      placeholder="Anak"
+                    >
+                      +
+                    </button>
+                    <button @click.stop="hapusAnak(index)" class="hapus">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -440,9 +525,19 @@
               </thead>
 
               <tbody>
+                <td><input type="text" v-model="kursus.bidang" /></td>
+                <td>
+                  <input type="text" v-model="kursus.penyelenggara" />
+                </td>
+                <td><input type="text" v-model="kursus.lokasi" /></td>
+                <td><input type="text" v-model="kursus.lama" /></td>
+                <td><input type="number" v-model="kursus.tahun" /></td>
+                <td><input type="text" v-model="kursus.biaya" /></td>
                 <tr v-for="(kursus, index) in kursus" :key="index">
                   <td><input type="text" v-model="kursus.bidang" /></td>
-                  <td><input type="text" v-model="kursus.penyelenggara" /></td>
+                  <td>
+                    <input type="text" v-model="kursus.penyelenggara" />
+                  </td>
                   <td><input type="text" v-model="kursus.lokasi" /></td>
                   <td><input type="text" v-model="kursus.lama" /></td>
                   <td><input type="number" v-model="kursus.tahun" /></td>
@@ -485,6 +580,44 @@
               </thead>
 
               <tbody>
+                <td>
+                  <select v-model="bahasa.macambahasa">
+                    <option value="Indonesia">Indonesia</option>
+                    <option value="Inggris">Inggris</option>
+                    <option value="Jepang">Jepang</option>
+                    <option value="Mandarin">Mandarin</option>
+                    <option value="Arab">Arab</option>
+                    <option value="Lainnya">Lainnya</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.membaca">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.menulis">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.mendengar">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
+                <td>
+                  <select v-model="bahasa.berbicara">
+                    <option value="Lulus">Baik Sekali</option>
+                    <option value="Tidak">Baik</option>
+                    <option value="Belum">Cukup</option>
+                  </select>
+                </td>
                 <tr v-for="(bahasa, index) in bahasa" :key="index">
                   <td>
                     <select v-model="bahasa.macambahasa">
@@ -662,9 +795,7 @@
           </table>
         </div>
       </div>
-    </template>
 
-    <template #3>
       <!-- Step 3 Content -->
       <div class="container-form">
         <!-- Riwayat Pekerjaan -->
@@ -955,15 +1086,25 @@
 
               <tbody>
                 <td><input type="text" v-model="referensi.nama" /></td>
-                <td><input type="text" v-model="referensi.alamatTelp" /></td>
+                <td>
+                  <input type="text" v-model="referensi.alamatTelp" />
+                </td>
                 <td><input type="text" v-model="referensi.pekerjaan" /></td>
-                <td><input type="number" v-model="referensi.hubungan" /></td>
+                <td>
+                  <input type="number" v-model="referensi.hubungan" />
+                </td>
 
                 <tr v-for="(referensi, index) in referensi" :key="index">
                   <td><input type="text" v-model="referensi.nama" /></td>
-                  <td><input type="text" v-model="referensi.alamatTelp" /></td>
-                  <td><input type="text" v-model="referensi.pekerjaan" /></td>
-                  <td><input type="number" v-model="referensi.hubungan" /></td>
+                  <td>
+                    <input type="text" v-model="referensi.alamatTelp" />
+                  </td>
+                  <td>
+                    <input type="text" v-model="referensi.pekerjaan" />
+                  </td>
+                  <td>
+                    <input type="number" v-model="referensi.hubungan" />
+                  </td>
                 </tr>
               </tbody>
 
@@ -1010,10 +1151,8 @@
           ></textarea>
         </div>
       </div>
-    </template>
 
-    <template #4
-      ><!-- Step 4 Content -->
+      <!-- Step 4 Content -->
       <div class="container-form">
         <div id="app">
           <div class="table-responsive">
@@ -1031,25 +1170,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  id="pertanyaan"
-                  v-for="(pertanyaan, index) in pertanyaanList"
-                  :key="index"
-                >
+                <tr v-for="(pertanyaan, index) in pertanyaanList" :key="index">
                   <td style="text-align: left">{{ pertanyaan }}</td>
                   <td>
-                    <input
-                      type="checkbox"
-                      v-model="jawaban[index].ya"
-                      @change="toggleCheck(index, 'ya')"
-                    />
+                    <input type="checkbox" v-model="jawaban[index].ya" />
                   </td>
                   <td>
-                    <input
-                      type="checkbox"
-                      v-model="jawaban[index].tidak"
-                      @change="toggleCheck(index, 'tidak')"
-                    />
+                    <input type="checkbox" v-model="jawaban[index].tidak" />
                   </td>
                   <td>
                     <input type="text" v-model="jawaban[index].penjelasan" />
@@ -1060,11 +1187,6 @@
           </div>
         </div>
       </div>
-    </template>
-  </Vue3MultiStepper>
+    </div>
+  </div>
 </template>
-
-<style>
-@import url(../components/style.css);
-</style>
-<script src="../components/script.js"></script>

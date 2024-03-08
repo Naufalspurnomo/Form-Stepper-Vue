@@ -10,9 +10,12 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
     "@vue/compiler-sfc": "^3.4.20",
+    "axios": "^1.6.7",
     "core-js": "^3.8.3",
     "dropzone": "^6.0.0-beta.2",
     "firebase": "^10.8.1",
+    "gsap": "^3.12.5",
+    "iso-3166-country-list": "^0.2.0",
     "vue": "^3.4.20",
     "vue-demi": "^0.14.7",
     "vue-router": "^4.3.0",
