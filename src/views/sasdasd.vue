@@ -168,10 +168,10 @@
           </select>
           <!-- Input field for custom text -->
           <input
-            ref="otherInput"
+            ref="statusRumahLainnya"
             v-if="status_rumah_tinggal === 'Lainnya'"
             type="text"
-            v-model="otherText"
+            v-model="textRumahLainnya"
             class="form-control mt-2"
             placeholder="Tuliskan status rumah tinggal lainnya"
           />

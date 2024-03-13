@@ -85,7 +85,7 @@ a {
   top: 20px;
   text-decoration: none;
   cursor: pointer;
-  z-index: 1; /* Menempatkan menu di atas dropdown */
+  z-index: 1;
 }
 
 .menu:after {
@@ -111,29 +111,57 @@ a {
   width: 100%;
 }
 
-.login {
-  border-radius: 50px;
-  padding: 15px;
-  margin: 0 15px;
-  width: 140px;
-  background: rgb(255, 255, 255);
-  background-clip: padding-box;
+.header-akun {
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-.login img {
-  max-height: 20px;
-  margin-right: 5px;
-  align-items: center;
+  margin-right: 10px;
 }
 
-.login a {
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  border: 2px solid #fff;
+  border-radius: 5%;
+  padding: 15px 20px;
+  font-size: 15px;
+  color: #fff;
+  background-color: transparent;
+  cursor: pointer;
+  -webkit-border-radius: 10%;
+  -moz-border-radius: 10%;
+  -ms-border-radius: 10%;
+  -o-border-radius: 10%;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+}
+
+.dropdown-toggle i {
+  margin-right: 10px;
+}
+
+.dropdown-toggle:hover {
+  background-color: #003b57;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 15px 30px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
   text-decoration: none;
-  color: rgb(0, 0, 0);
-  display: flex;
-  align-items: center;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  cursor: pointer;
 }
 
 .logo img {
@@ -173,9 +201,10 @@ a {
 .content {
   padding-top: 5%;
   text-align: justify;
+  margin: 20px 50px;
 }
-.steppy {
-  margin: 50px 100px;
+.vue3-multi-stepper {
+  margin: 20px 30px;
 }
 .container-form {
   display: flex;
@@ -257,7 +286,8 @@ select:hover {
   background-color: #ddd;
 }
 
-.uploadfoto {
+.uploadfoto,
+.uploadgambar {
   padding: 5%;
   height: 30vh;
   display: flex;
@@ -277,7 +307,8 @@ input[type="file"] {
   margin-top: 20px;
   background-color: rgb(255, 255, 255);
 }
-#uploadedImage {
+#uploadedImage,
+#uploadedImagePosisi {
   max-width: 50%;
   max-height: 100px;
 }
@@ -342,21 +373,10 @@ input[type="file"] {
   border-radius: 3px;
   box-sizing: border-box;
 }
-.tambah-saudara,
-.tambah-anak,
-.tambah-kuliah,
-.tambah-kursus,
-.tambah-bahasa,
-.tambah-sosial,
-.tambah-riwayat,
-.tambah-referensi {
-  font-size: 15px;
-  background-color: #0056b3;
-
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
+.tambah {
+  background-color: #0055ff;
+  color: white;
+  font-weight: bold;
 }
 .hapus {
   background-color: red;
@@ -367,38 +387,6 @@ input[type="file"] {
   color: #ffffff;
 }
 
-.tambah-saudara::after {
-  content: "Saudara";
-  color: rgb(255, 255, 255);
-}
-.tambah-anak::after {
-  content: "Anak";
-  color: rgb(255, 255, 255);
-}
-.tambah-kuliah::after {
-  content: "Kuliah";
-  color: rgb(255, 255, 255);
-}
-.tambah-kursus::after {
-  content: "Kursus";
-  color: rgb(255, 255, 255);
-}
-.tambah-bahasa::after {
-  content: "Bahasa";
-  color: rgb(255, 255, 255);
-}
-.tambah-sosial::after {
-  content: "Kegiatan Sosial";
-  color: rgb(255, 255, 255);
-}
-.tambah-riwayat::after {
-  content: "Riwayat";
-  color: rgb(255, 255, 255);
-}
-.tambah-referensi::after {
-  content: "Referensi";
-  color: rgb(255, 255, 255);
-}
 .container-hobi {
   border: 1px solid #ddd;
   padding: 10px;

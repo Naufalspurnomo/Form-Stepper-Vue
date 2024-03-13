@@ -6,19 +6,36 @@
           <img src="../assets/pt_sanqua_cover.jpg" alt="Logo" />
           <img src="../assets/pt_sanqu_cover2.jpg" alt="Logo" />
         </div>
-        <div class="login">
-          <a v-if="isLoggedIn">
-            <img src="../assets/user.png" alt="User" />
-            <span @click="toggleDropdown">
-              {{ userEmail }}
-              <template v-if="showDropdown">
-                <button @click.prevent="logout">Keluar</button>
-              </template>
-            </span>
-          </a>
-
-          <router-link v-else :to="{ name: 'Login' }">Masuk Akun</router-link>
+        <div class="header-akun">
+          <div class="dropdown">
+            <button
+              class="dropdown-toggle"
+              type="button"
+              id="dropdownMenuButton"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              @click="toggleDropdown"
+            >
+             <i class="fas fa-user-circle"></i>
+             <span class="nama-akun">
+                {{ isLoggedIn ? userEmail : 'Masuk Akun' }} 
+             </span> 
+            </button>
+        
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-show="dropdownOpen">
+              <li v-if="isLoggedIn">
+                <a class="dropdown-item" @click.prevent="logout">Keluar Akun</a>
+              </li>
+              <li v-else>
+                <router-link class="dropdown-item" :to="{ name: 'Login' }">Masuk Akun</router-link>
+              </li>
+            </ul>
+          </div>
         </div>
+        
+        
+      
+      
       </div>
       <!-- <div class="sides" id="logoSide">
             <img src="./assets/pt_sanqua_cover.jpg" alt="Logo Website" />
@@ -49,6 +66,7 @@
     :loading="loading"
     :finalize="handleFormSubmission"
     :validateStep="validateStep"
+    class="vue3-multi-stepper"
   >
     <template #1
       ><!-- Step 1 Content -->
@@ -131,18 +149,13 @@
         </div>
 
         <div class="form-group">
-          <label for="kebangsaan">Kebangsaan</label>
-          <select id="kebangsaan" v-model="kebangsaan" class="form-control">
-            <option value="">Pilih Kebangsaan (Ketik Negara)</option>
-            <option
-              v-for="negara in countries"
-              :value="negara.alpha2Code"
-              :key="negara.alpha2Code"
-            >
-              {{ negara.name }}
-            </option>
-          </select>
+          <label for="countries">Choose your Country:</label>
+          <select id="countries" name="countries" v-model="kebangsaan">
+            <option value="" disabled>Select your country</option>
+            <option v-for="(country, index) in countries" :key="index" :value="country.name.common">{{ country.name.common }}</option>  
+          </select>  
         </div>
+      
 
         <div class="form-group">
           <label for="tempat-lahir">Tempat Lahir</label>
@@ -221,10 +234,10 @@
           </select>
           <!-- Input field for custom text -->
           <input
-            ref="otherInput"
+            ref="statusRumahLainnya"
             v-if="status_rumah_tinggal === 'Lainnya'"
             type="text"
-            v-model="otherText"
+            v-model="textRumahLainnya"
             class="form-control mt-2"
             placeholder="Tuliskan status rumah tinggal lainnya"
           />
@@ -258,7 +271,8 @@
               type="file"
               id="dropzoneFile"
               class="dropzoneFile"
-              @change="handleFileSelect"
+              ref="fileInput"
+              @change="fotoDataDiri"
             />
           </div>
           <img
@@ -294,9 +308,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(pendidikan, index) in pendidikan" :key="index">
+                <tr v-for="(riwayatPendidikan, index) in riwayatPendidikan" :key="index">
                   <td>
-                    <select v-model="pendidikan.tingkat">
+                    <select v-model="riwayatPendidikan.tingkat_pendidikan">
                       <option value="SD/Sederajat">SD/Sederajat</option>
                       <option value="SMP/Sederajat">SMP/Sederajat</option>
                       <option value="SMA/Sederajat">SMA/Sederajat</option>
@@ -308,36 +322,37 @@
                       <option value="S3">S3</option>
                     </select>
                   </td>
-
                   <td>
-                    <input type="text" v-model="pendidikan.namasekolah" />
+                    <input type="text" v-model="riwayatPendidikan.nama_sekolah" />
                   </td>
                   <td>
-                    <input type="text" v-model="pendidikan.tempatsekolah" />
+                    <input type="text" v-model="riwayatPendidikan.tempat_sekolah" />
                   </td>
                   <td>
                     <input
                       type="text"
-                      v-model="pendidikan.jurusan"
+                      v-model="riwayatPendidikan.jurusan_sekolah"
                       placeholder=""
                     />
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      v-model="pendidikan.tahunDari"
-                      style="width: 50px"
-                    />
+                    <VueDatePicker 
+                    style="width:80px" 
+                    v-model="riwayatPendidikan.tahunMasuk" 
+                    year-picker 
+                    :min-date="new Date('2000-01-01')"
+                    :max-date="new Date('2024-12-31')"
+                />
+                
+                  </td>
+                  
+                  <td>
+                   <VueDatePicker style="width:80px" v-model="riwayatPendidikan.tahunKeluar" year-picker 
+                   :min-date="new Date('2000-01-01')"
+                   :max-date="new Date('2024-12-31')" />
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      v-model="pendidikan.tahunSampai"
-                      style="width: 50px"
-                    />
-                  </td>
-                  <td>
-                    <select v-model="pendidikan.statuskelulusan">
+                    <select v-model="riwayatPendidikan.status_kelulusan">
                       <option value="Lulus">Lulus</option>
                       <option value="Tidak">Tidak Lulus</option>
                       <option value="Belum">Belum Lulus</option>
@@ -347,7 +362,7 @@
                 <tr>
                   <td>
                     <button
-                      class="tambah-pendidikan"
+                      class="tambah"
                       @click.stop="tambahPendidikan()"
                     >
                       +
@@ -382,16 +397,33 @@
               </thead>
               <tbody>
                 <tr v-for="(keluarga, index) in keluarga" :key="index">
-                  <td><input type="text" v-model="keluarga.hubungan" /></td>
+                  <td><input type="text" v-model="keluarga.hubungan_keluarga" /></td>
                   <td><input type="text" v-model="keluarga.nama" /></td>
                   <td>
-                    <input type="text" v-model="keluarga.jenis_kelamin" />
+                    <select
+                    id="jenis_kelamin"
+                    v-model="keluarga.jenis_kelamin"
+                    class="form-control"
+                  >
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
                   </td>
                   <td>
                     <input type="date" v-model="keluarga.tanggal_lahir" />
                   </td>
                   <td>
-                    <input type="text" v-model="keluarga.pendidikan_terakhir" />
+                    <select v-model="keluarga.pendidikan_terakhir" >
+                      <option value="SD/Sederajat">SD/Sederajat</option>
+                      <option value="SMP/Sederajat">SMP/Sederajat</option>
+                      <option value="SMA/Sederajat">SMA/Sederajat</option>
+                      <option value="D1">D1</option>
+                      <option value="D2">D2</option>
+                      <option value="D3">D3</option>
+                      <option value="S1">S1</option>
+                      <option value="S2">S2</option>
+                      <option value="S3">S3</option>
+                    </select>
                   </td>
                   <td>
                     <input type="text" v-model="keluarga.perusahaan_terakhir" />
@@ -407,7 +439,7 @@
                 <tr>
                   <td>
                     <button
-                      class="tambah-keluarga"
+                      class="tambah"
                       @click.stop="tambahKeluarga()"
                     >
                       +
@@ -440,20 +472,20 @@
               </thead>
 
               <tbody>
-                <tr v-for="(kursus, index) in kursus" :key="index">
-                  <td><input type="text" v-model="kursus.bidang" /></td>
-                  <td><input type="text" v-model="kursus.penyelenggara" /></td>
-                  <td><input type="text" v-model="kursus.lokasi" /></td>
-                  <td><input type="text" v-model="kursus.lama" /></td>
-                  <td><input type="number" v-model="kursus.tahun" /></td>
-                  <td><input type="text" v-model="kursus.biaya" /></td>
+                <tr v-for="(kursus_training, index) in kursus_training" :key="index">
+                  <td><input type="text" v-model="kursus_training.jenis_kursus" /></td>
+                  <td><input type="text" v-model="kursus_training.penyelenggara" /></td>
+                  <td><input type="text" v-model="kursus_training.lokasi" /></td>
+                  <td><input type="text" v-model="kursus_training.lama_kursus" /></td>
+                  <td><input type="number" v-model="kursus_training.tahun_mulai_kursus" /></td>
+                  <td><input type="text" v-model="kursus_training.biaya_kursus" /></td>
                 </tr>
               </tbody>
 
               <tr>
                 <td>
                   <button
-                    class="tambah-kursus"
+                    class="tambah"
                     @click.stop="tambahKursus()"
                     placeholder="Kursus"
                   >
@@ -476,7 +508,7 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th rowspan="2">Macam</th>
+                  <th rowspan="2">Jenis Bahasa</th>
                   <th rowspan="2">Membaca</th>
                   <th rowspan="2">Menulis</th>
                   <th rowspan="2">Mendengar</th>
@@ -485,40 +517,33 @@
               </thead>
 
               <tbody>
-                <tr v-for="(bahasa, index) in bahasa" :key="index">
+                <tr v-for="(pengetahuanBahasa, index) in pengetahuanBahasa" :key="index">
                   <td>
-                    <select v-model="bahasa.macambahasa">
-                      <option value="Indonesia">Indonesia</option>
-                      <option value="Inggris">Inggris</option>
-                      <option value="Jepang">Jepang</option>
-                      <option value="Mandarin">Mandarin</option>
-                      <option value="Arab">Arab</option>
-                      <option value="Lainnya">Lainnya</option>
-                    </select>
+                    <input type="text" v-model="pengetahuanBahasa.jenis_bahasa" />
                   </td>
                   <td>
-                    <select v-model="bahasa.membaca">
+                    <select v-model="pengetahuanBahasa.tingkat_membaca">
                       <option value="Lulus">Baik Sekali</option>
                       <option value="Tidak">Baik</option>
                       <option value="Belum">Cukup</option>
                     </select>
                   </td>
                   <td>
-                    <select v-model="bahasa.menulis">
+                    <select v-model="pengetahuanBahasa.tingkat_menulis">
                       <option value="Lulus">Baik Sekali</option>
                       <option value="Tidak">Baik</option>
                       <option value="Belum">Cukup</option>
                     </select>
                   </td>
                   <td>
-                    <select v-model="bahasa.mendengar">
+                    <select v-model="pengetahuanBahasa.tingkat_mendengar">
                       <option value="Lulus">Baik Sekali</option>
                       <option value="Tidak">Baik</option>
                       <option value="Belum">Cukup</option>
                     </select>
                   </td>
                   <td>
-                    <select v-model="bahasa.berbicara">
+                    <select v-model="pengetahuanBahasa.tingkat_berbicara">
                       <option value="Lulus">Baik Sekali</option>
                       <option value="Tidak">Baik</option>
                       <option value="Belum">Cukup</option>
@@ -530,7 +555,7 @@
               <tr>
                 <td>
                   <button
-                    class="tambah-bahasa"
+                    class="tambah"
                     @click.stop="tambahBahasa()"
                     placeholder="Bahasa"
                   >
@@ -562,24 +587,19 @@
               </thead>
 
               <tbody>
-                <td><input type="text" v-model="sosial.organisasi" /></td>
-                <td><input type="text" v-model="sosial.kegiatan" /></td>
-                <td><input type="text" v-model="sosial.jabatan" /></td>
-                <td><input type="number" v-model="sosial.tahun" /></td>
-                <td><input type="text" v-model="sosial.keterangan" /></td>
-                <tr v-for="(sosial, index) in sosial" :key="index">
-                  <td><input type="text" v-model="sosial.organisasi" /></td>
-                  <td><input type="text" v-model="sosial.kegiatan" /></td>
-                  <td><input type="text" v-model="sosial.jabatan" /></td>
-                  <td><input type="number" v-model="sosial.tahun" /></td>
-                  <td><input type="text" v-model="sosial.keterangan" /></td>
+                <tr v-for="(kegiatanSosial, index) in kegiatanSosial" :key="index">
+                  <td><input type="text" v-model="kegiatanSosial.kegiatan_organisasi" /></td>
+                  <td><input type="text" v-model="kegiatanSosial.macam_kegiatan" /></td>
+                  <td><input type="text" v-model="kegiatanSosial.jabatan" /></td>
+                  <td><input type="number" v-model="kegiatanSosial.tahun_saat_berkegiatan" /></td>
+                  <td><input type="text" v-model="kegiatanSosial.keterangan" /></td>
                 </tr>
               </tbody>
 
               <tr>
                 <td>
                   <button
-                    class="tambah-sosial"
+                    class="tambah"
                     @click.stop="tambahSosial()"
                     placeholder="Sosial"
                   >
@@ -600,8 +620,7 @@
             <div style="text-align: center">
               <h2>Hobi dan Kegiatan Waktu Luang</h2>
             </div>
-
-            <textarea id="hobi" v-model="hobi"></textarea>
+            <textarea id="hobi" v-model="hobiKegiatanLuang.kegiatan"></textarea>
           </div>
           <table class="table-hobi">
             <tr>
@@ -610,40 +629,35 @@
             </tr>
             <tr>
               <td>
-                <input type="radio" name="membaca" value="banyak" id="banyak" />
+                <input
+                  type="radio"
+                  v-model="hobiKegiatanLuang.frekuensiBaca"
+                  value="banyak"
+                  id="banyak"
+                />
                 <label for="banyak">Banyak</label><br />
-                <input type="radio" name="membaca" value="sedang" id="sedang" />
+                <input
+                  type="radio"
+                  v-model="hobiKegiatanLuang.frekuensiBaca"
+                  value="sedang"
+                  id="sedang"
+                />
                 <label for="sedang">Sedang</label><br />
                 <input
                   type="radio"
-                  name="membaca"
+                  v-model="hobiKegiatanLuang.frekuensiBaca"
                   value="sedikit"
                   id="sedikit"
                 />
                 <label for="sedikit">Sedikit</label>
               </td>
+
               <td>
-                <input
-                  type="checkbox"
-                  name="pokok-bacaan"
-                  value="fiksi"
-                  id="fiksi"
-                />
-                <label for="fiksi">Fiksi</label><br />
-                <input
-                  type="checkbox"
-                  name="pokok-bacaan"
-                  value="non-fiksi"
-                  id="non-fiksi"
-                />
-                <label for="non-fiksi">Non-fiksi</label><br />
-                <input
-                  type="checkbox"
-                  name="pokok-bacaan"
-                  value="ilmiah"
-                  id="ilmiah"
-                />
-                <label for="ilmiah">Ilmiah</label>
+                <textarea
+                  v-model="hobiKegiatanLuang.pokokBaca"
+                  name="pokok_baca"
+                  style="height: 100px"
+                ></textarea>
               </td>
             </tr>
           </table>
@@ -652,11 +666,23 @@
           <table class="table-hobi">
             <tr>
               <th>Surat Kabar</th>
-              <td><input type="text" name="surat_kabar" size="30" /></td>
+              <td>
+                <input
+                  type="text"
+                  v-model="hobiKegiatanLuang.suratKabar"
+                  size="30"
+                />
+              </td>
             </tr>
             <tr>
               <th>Majalah</th>
-              <td><input type="text" name="majalah" size="30" /></td>
+              <td>
+                <input
+                  type="text"
+                  v-model="hobiKegiatanLuang.majalah"
+                  size="30"
+                />
+              </td>
             </tr>
             <tr></tr>
           </table>
@@ -672,151 +698,38 @@
           <h2>Riwayat Pekerjaan: Dimulai Dengan Pekerjaan Sekarang</h2>
           <div class="form-group">
             <div class="table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered" >
+                <div v-for="(riwayatPekerjaan, index) in riwayatPekerjaan" :key="index">
                 <thead>
                   <tr>
                     <th>Periode</th>
                     <th>Perusahaan</th>
                     <th>Jabatan</th>
                     <th>Detail Perusahaan</th>
-                    <th>Alasan Berhenti</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <td>
-                    <div class="form-group">
-                      <label>Dari:</label>
-                      <input
-                        type="date"
-                        class="form-control"
-                        v-model="riwayat.dari"
-                        required
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Sampai:</label>
-                      <input
-                        type="date"
-                        class="form-control"
-                        v-model="riwayat.sampai"
-                        required
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <label>Nama Perusahaan:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.namaPerusahaan"
-                        required
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Alamat Perusahaan:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.alamatPerusahaan"
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Telepon Perusahaan:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.teleponPerusahaan"
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <label>Jabatan Awal:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.jabatanAwal"
-                        required
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Jabatan Akhir:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.jabatanAkhir"
-                        required
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <label>Jenis Usaha:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.jenisUsaha"
-                        required
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Jumlah Karyawan:</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        v-model="riwayat.jumlahKaryawan"
-                        required
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Nama Atasan Langsung:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.namaAtasanLangsung"
-                        required
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Nama Direktur:</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        v-model="riwayat.namaDirektur"
-                        required
-                      />
-                    </div>
-                  </td>
-                  <td>
-                    <div class="form-group">
-                      <label>Ceritakan:</label>
-                      <textarea
-                        class="form-control"
-                        v-model="riwayat.alasanBerhenti"
-                        required
-                      ></textarea>
-                    </div>
-                  </td>
-                  <tr v-for="(riwayat, index) in riwayat" :key="index">
+                <tbody >
+                  <tr>
                     <td>
                       <div class="form-group">
                         <label>Dari:</label>
-                        <input
-                          type="date"
-                          class="form-control"
-                          v-model="riwayat.dari"
-                          required
-                        />
+                        <VueDatePicker 
+                        style="width:80px" 
+                        v-model="riwayatPekerjaan.pekerjaan_dimulai" 
+                        year-picker 
+                        :min-date="new Date('2000-01-01')"
+                        :max-date="new Date('2024-12-31')"
+                    />
                       </div>
                       <div class="form-group">
                         <label>Sampai:</label>
-                        <input
-                          type="date"
-                          class="form-control"
-                          v-model="riwayat.sampai"
-                          required
-                        />
+                        <VueDatePicker 
+                        style="width:80px" 
+                        v-model="riwayatPekerjaan.pekerjaan_selesai" 
+                        year-picker 
+                        :min-date="new Date('2000-01-01')"
+                        :max-date="new Date('2024-12-31')"
+                    />
                       </div>
                     </td>
                     <td>
@@ -825,7 +738,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.namaPerusahaan"
+                          v-model="riwayatPekerjaan.namaPerusahaan"
                           required
                         />
                       </div>
@@ -834,7 +747,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.alamatPerusahaan"
+                          v-model="riwayatPekerjaan.alamatPerusahaan"
                         />
                       </div>
                       <div class="form-group">
@@ -842,7 +755,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.teleponPerusahaan"
+                          v-model="riwayatPekerjaan.teleponPerusahaan"
                         />
                       </div>
                     </td>
@@ -852,7 +765,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.jabatanAwal"
+                          v-model="riwayatPekerjaan.jabatanAwal"
                           required
                         />
                       </div>
@@ -861,7 +774,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.jabatanAkhir"
+                          v-model="riwayatPekerjaan.jabatanAkhir"
                           required
                         />
                       </div>
@@ -872,7 +785,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.jenisUsaha"
+                          v-model="riwayatPekerjaan.jenisUsaha"
                           required
                         />
                       </div>
@@ -881,7 +794,7 @@
                         <input
                           type="number"
                           class="form-control"
-                          v-model="riwayat.jumlahKaryawan"
+                          v-model="riwayatPekerjaan.jumlahKaryawan"
                           required
                         />
                       </div>
@@ -890,7 +803,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.namaAtasanLangsung"
+                          v-model="riwayatPekerjaan.namaAtasanLangsung"
                           required
                         />
                       </div>
@@ -899,38 +812,38 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayat.namaDirektur"
+                          v-model="riwayatPekerjaan.namaDirektur"
                           required
                         />
                       </div>
                     </td>
-                    <td>
-                      <div class="form-group">
-                        <label>Ceritakan:</label>
-                        <textarea
-                          class="form-control"
-                          v-model="riwayat.alasanBerhenti"
-                          required
-                        ></textarea>
-                      </div>
-                    </td>
                   </tr>
-                </tbody>
-                <tr>
-                  <td>
-                    <button
-                      class="tambah-riwayat"
-                      @click.stop="tambahRiwayat()"
-                      placeholder="Riwayat Pekerjaan"
-                    >
-                      +
-                    </button>
-                    <button @click.stop="hapusRiwayat(index)" class="hapus">
-                      <i class="fas fa-trash"></i>
-                    </button>
+                  <td colspan="3">
+                    <th>Alasan Berhenti</th>
+                    <textarea
+                      name="alasan_berhenti"
+                      style="width: 100%; height: 150px"
+                      v-model="riwayatPekerjaan.alasanBerhenti"
+                    ></textarea>
                   </td>
-                </tr>
+                </tbody>
+              </div>
+              <tr>
+                <td>
+                  <button
+                    class="tambah"
+                    @click.stop="tambahRiwayat()"
+                    placeholder="Riwayat Pekerjaan"
+                  >
+                    +
+                  </button>
+                  <button @click.stop="hapusRiwayat(index)" class="hapus">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
               </table>
+            
             </div>
           </div>
         </div>
@@ -954,23 +867,18 @@
               </thead>
 
               <tbody>
-                <td><input type="text" v-model="referensi.nama" /></td>
-                <td><input type="text" v-model="referensi.alamatTelp" /></td>
-                <td><input type="text" v-model="referensi.pekerjaan" /></td>
-                <td><input type="number" v-model="referensi.hubungan" /></td>
-
-                <tr v-for="(referensi, index) in referensi" :key="index">
-                  <td><input type="text" v-model="referensi.nama" /></td>
-                  <td><input type="text" v-model="referensi.alamatTelp" /></td>
-                  <td><input type="text" v-model="referensi.pekerjaan" /></td>
-                  <td><input type="number" v-model="referensi.hubungan" /></td>
+                <tr v-for="(referensiKontakKenalan, index) in referensiKontakKenalan" :key="index">
+                  <td><input type="text" v-model="referensiKontakKenalan.nama_kenalan" /></td>
+                  <td><input type="text" v-model="referensiKontakKenalan.alamatTelp" /></td>
+                  <td><input type="text" v-model="referensiKontakKenalan.pekerjaan" /></td>
+                  <td><input type="number" v-model="referensiKontakKenalan.hubungan" /></td>
                 </tr>
               </tbody>
 
               <tr>
                 <td>
                   <button
-                    class="tambah-referensi"
+                    class="tambah"
                     @click.stop="tambahReferensi()"
                     placeholder="Refensi"
                   >
@@ -988,7 +896,7 @@
         <!-- Uraian Tugas & Tanggungjawab -->
         <div id="app">
           <h2>
-            Uraikan Tugas Dan Tanggungjawab Pada Jabatan Anda Yang Terakhir
+            Uraikan Tugas Dan Tanggung Jawab Pada Jabatan Anda Yang Terakhir
           </h2>
           <textarea
             id="uraiantugas"
@@ -1003,11 +911,30 @@
             Gambarkan Posisi Pada Struktur Organisasi Tempat Terakhir Anda
             Bekerja
           </h2>
-          <textarea
-            id="gambarposisi"
-            v-model="gambaran"
-            class="form-control"
-          ></textarea>
+          <div class="uploadgambar">
+            <div
+            @dragenter.prevent="toggleActivePosisi"
+            @dragleave.prevent="toggleActivePosisi"
+            @dragover.prevent
+            @drop.prevent="handleDropPosisi"
+            :class="{ 'active-dropzone': activePosisi }"
+            class="dropzone"
+          >
+            <label for="dropzonePosisi">Upload Gambar Posisi</label>
+            <input
+              type="file"
+              id="dropzoneFilePosisi"
+              class="dropzoneFile"
+              ref="fileInputPosisi"
+              @change="gambaranPosisi"
+            />
+          </div>
+          <img
+            id="uploadedImagePosisi"
+            v-if="uploadedImageUrlPosisi"
+            :src="uploadedImageUrlPosisi"
+          />
+          </div>
         </div>
       </div>
     </template>
@@ -1064,7 +991,5 @@
   </Vue3MultiStepper>
 </template>
 
-<style>
-@import url(../components/style.css);
-</style>
+<style scoped src="../components/style.css"> </style>
 <script src="../components/script.js"></script>
