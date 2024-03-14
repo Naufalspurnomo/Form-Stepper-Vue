@@ -72,7 +72,7 @@
       ><!-- Step 1 Content -->
       <div class="container-form">
         <h2>Data Diri</h2>
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked && !pekerjaan }">
           <label for="pekerjaan">Pekerjaan Yang Dilamar</label>
           <input
             type="text"
@@ -82,7 +82,7 @@
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !nama_lengkap }">
           <label for="nama_lengkap">Nama Lengkap</label>
           <input
             type="text"
@@ -90,18 +90,20 @@
             v-model="nama_lengkap"
             class="form-control"
           />
+         
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !alamat }">
           <label for="alamat">Alamat Berdasarkan KTP</label>
           <textarea
             id="alamat"
             v-model="alamat"
             class="form-control"
           ></textarea>
+         
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !telepon }">
           <label for="telepon">Telepon</label>
           <input
             type="text"
@@ -110,9 +112,10 @@
             class="form-control"
             oninput="this.value = this.value.replace(/[^0-9]/g, '')"
           />
+          
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked && !jenis_kelamin }">
           <label for="jenis_kelamin">Jenis Kelamin</label>
           <select
             id="jenis_kelamin"
@@ -122,9 +125,10 @@
             <option value="Laki-laki">Laki-laki</option>
             <option value="Perempuan">Perempuan</option>
           </select>
+        
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !tinggi_badan }">
           <label for="tinggi_badan">Tinggi Badan (cm)</label>
           <input
             type="number"
@@ -133,7 +137,7 @@
             class="form-control"
           />
         </div>
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !berat_badan }">
           <label for="berat_badan">Berat Badan (kg)</label>
           <input
             type="number"
@@ -143,21 +147,21 @@
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !agama }">
           <label for="agama">Agama</label>
           <input type="text" id="agama" v-model="agama" class="form-control" />
         </div>
 
-        <div class="form-group">
-          <label for="countries">Choose your Country:</label>
-          <select id="countries" name="countries" v-model="kebangsaan">
+       <div class="form-group" :class="{ 'has-error': nextClicked &&  !kebangsaan }">
+          <label for="countries">Kebangsaan</label>
+          <select id="countries" name="countries" v-model="kebangsaan" class="form-control">
             <option value="" disabled>Select your country</option>
             <option v-for="(country, index) in countries" :key="index" :value="country.name.common">{{ country.name.common }}</option>  
           </select>  
         </div>
       
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !tempat_lahir }">
           <label for="tempat-lahir">Tempat Lahir</label>
           <input
             type="text"
@@ -166,12 +170,13 @@
             class="form-control"
           />
         </div>
-        <div class="form-group">
+        
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !lahir }">
           <label for="lahir">Tanggal Lahir</label>
           <input type="date" id="lahir" v-model="lahir" class="form-control" />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !status_perkawinan }">
           <label for="status_perkawinan">Status Perkawinan</label>
           <select
             id="status_perkawinan"
@@ -184,7 +189,7 @@
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !golongan_darah }">
           <label for="golongan_darah">Golongan Darah</label>
           <select
             id="golongan_darah"
@@ -198,27 +203,27 @@
           </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !nomor_ktp }">
           <label for="nomor_ktp">Nomor KTP</label>
           <input
-            type="text"
+            type="number"
             id="nomor_ktp"
             v-model="nomor_ktp"
             class="form-control"
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !nomor_sim }">
           <label for="nomor_sim">Nomor SIM</label>
           <input
-            type="text"
+            type="number"
             id="nomor_sim"
             v-model="nomor_sim"
             class="form-control"
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !status_rumah_tinggal }">
           <label for="status_rumah_tinggal">Status Rumah Tinggal</label>
           <select
             id="status_rumah_tinggal"
@@ -243,18 +248,15 @@
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !kendaraan }">
           <label for="kendaraan">Kendaraan</label>
           <input
             type="text"
             id="kendaraan"
             v-model="kendaraan"
             class="form-control"
+            placeholder="Beritahukan dengan rinci. Seperti jenis, merk, tahun, dan status kepemilikan."
           />
-          <p class="help-block">
-            Note: Beritahukan dengan rinci. Seperti jenis, merk, tahun, dan
-            status kepemilikan.
-          </p>
         </div>
 
         <div class="uploadfoto">
@@ -281,6 +283,8 @@
             :src="uploadedImageUrl"
           />
         </div>
+
+        
       </div>
     </template>
 
@@ -871,7 +875,7 @@
                   <td><input type="text" v-model="referensiKontakKenalan.nama_kenalan" /></td>
                   <td><input type="text" v-model="referensiKontakKenalan.alamatTelp" /></td>
                   <td><input type="text" v-model="referensiKontakKenalan.pekerjaan" /></td>
-                  <td><input type="number" v-model="referensiKontakKenalan.hubungan" /></td>
+                  <td><input type="text" v-model="referensiKontakKenalan.hubungan" /></td>
                 </tr>
               </tbody>
 
@@ -900,7 +904,7 @@
           </h2>
           <textarea
             id="uraiantugas"
-            v-model="uraian"
+            v-model="uraianTugasTanggungJawab"
             class="form-control"
           ></textarea>
         </div>
@@ -993,3 +997,4 @@
 
 <style scoped src="../components/style.css"> </style>
 <script src="../components/script.js"></script>
+

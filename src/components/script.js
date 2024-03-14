@@ -23,6 +23,7 @@ export default {
       userEmail: null,
       dropdownOpen: false,
       formData: {},
+      nextClicked: false,
 
       tabs: computed(() => {
         return [
@@ -310,6 +311,11 @@ export default {
       reader.readAsDataURL(file);
     },
 
+    handleStepChange(newStep, oldStep) {
+      if (newStep > oldStep) {
+        this.nextClicked = true;
+      }
+    },
     validateStep(step) {
       this.scrollToTop();
       if (step === 1) {
@@ -334,7 +340,31 @@ export default {
       }
     },
     step1Check() {
-      return true;
+      if (
+        !this.pekerjaan ||
+        !this.nama_lengkap ||
+        !this.alamat ||
+        !this.telepon ||
+        !this.jenis_kelamin ||
+        !this.tinggi_badan ||
+        !this.berat_badan ||
+        !this.agama ||
+        !this.kebangsaan ||
+        !this.tempat_lahir ||
+        !this.lahir ||
+        !this.status_perkawinan ||
+        !this.golongan_darah ||
+        !this.nomor_ktp ||
+        !this.nomor_sim ||
+        !this.status_rumah_tinggal ||
+        !this.kendaraan
+      ) {
+        this.nextClicked = true;
+        alert("Silakan isi kelengkapan Anda.");
+        return true;
+      } else {
+        return true;
+      }
     },
     step2Check() {
       return true;

@@ -146,6 +146,8 @@ a {
 }
 
 .dropdown-menu {
+  height: 50px;
+  text-align: center;
   position: absolute;
   top: 100%;
   left: 0;
@@ -156,11 +158,11 @@ a {
 }
 
 .dropdown-item {
+  display: inline-block;
   padding: 15px 30px;
   font-size: 16px;
   line-height: 1.5;
   color: #333;
-  text-decoration: none;
   cursor: pointer;
 }
 
@@ -206,6 +208,14 @@ a {
 .vue3-multi-stepper {
   margin: 20px 30px;
 }
+.has-error .form-control {
+  border-color: red;
+}
+
+.has-error .text-danger {
+  color: red;
+}
+
 .container-form {
   display: flex;
   flex-direction: column;
@@ -289,10 +299,11 @@ select:hover {
 .uploadfoto,
 .uploadgambar {
   padding: 5%;
-  height: 30vh;
+  height: 50vh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-color: #f1f1f1;
   border: 2px dashed #ffd311;
   border-radius: 5px;
@@ -310,7 +321,7 @@ input[type="file"] {
 #uploadedImage,
 #uploadedImagePosisi {
   max-width: 50%;
-  max-height: 100px;
+  max-height: 120px;
 }
 .active-dropzone {
   border: 2px dashed #333;

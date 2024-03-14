@@ -24,7 +24,7 @@
               />
             </div>
 
-            <div id="recaptcha"></div>
+            <div id="captcha"></div>
             <button
               type="submit"
               value="Login"
@@ -89,7 +89,7 @@
             </p>
             <button class="btn transparent" id="sign-up-btn">Sign up</button>
           </div>
-          <img src="../assets/log.svg" class="image" alt="" />
+          <img src="" class="image" alt="" />
         </div>
         <div class="panel right-panel">
           <div class="content">
@@ -100,7 +100,7 @@
             </p>
             <button class="btn transparent" id="sign-in-btn">Sign in</button>
           </div>
-          <img src="../assets/register.svg" class="image" alt="" />
+          <img src="" class="image" alt="" />
         </div>
       </div>
     </div>
@@ -114,6 +114,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/auth";
 import "firebase/compat/firestore";
+
 // import { gsap } from "gsap";
 
 export default {
@@ -124,10 +125,19 @@ export default {
       password: "",
       captchaVerified: false,
       showForgotPasswordForm: false,
+      geetest: "",
     };
   },
   mounted() {
-    this.renderRecaptcha();
+    let initGeetest4;
+    const script = document.createElement("script");
+    script.src = "https://static.geetest.com/v4/gt4.js";
+    script.onload = () => {
+      initGeetest4 = window.initGeetest4;
+      this.initGeetest4(initGeetest4);
+    };
+    document.head.appendChild(script);
+
     const sign_in_btn = document.querySelector("#sign-in-btn");
     const sign_up_btn = document.querySelector("#sign-up-btn");
     const container = document.querySelector(".container");
@@ -139,85 +149,75 @@ export default {
     sign_in_btn.addEventListener("click", () => {
       container.classList.remove("sign-up-mode");
     });
-
-    // const changePasswordBtn = document.getElementById("forgot-password-btn");
-    // const passwordForm = document.getElementById("password-form");
-    // const submitBtn = document.getElementById("forgot-password-submit");
-    // const backBtn = document.getElementById("forgot-password-back");
-    // const emailInput = document.getElementById("email");
-
-    // changePasswordBtn.addEventListener("click", function () {
-    //   passwordForm.classList.toggle("hidden");
-    //   setTimeout(function () {
-    //     passwordForm.classList.toggle("show");
-    //   }, 100);
-    // });
-
-    // backBtn.addEventListener("click", function () {
-    //   passwordForm.classList.toggle("show");
-    //   setTimeout(function () {
-    //     passwordForm.classList.toggle("hidden");
-    //   }, 100);
-    // });
-
-    // submitBtn.addEventListener("click", function (event) {
-    //   event.preventDefault();
-    //   const email = emailInput.value;
-    //   firebase
-    //     .auth()
-    //     .sendPasswordResetEmail(email)
-    //     .then(() => {
-    //       alert("Password reset email sent. Please check your inbox.");
-    //       passwordForm.classList.toggle("show");
-    //       setTimeout(function () {
-    //         passwordForm.classList.toggle("hidden");
-    //       }, 100);
-    //     })
-    //     .catch((error) => {
-    //       alert("An error occurred. Please try again later.");
-    //       console.error(error);
-    //     });
-    // });
   },
 
   methods: {
-    login() {
-      if (this.captchaVerified) {
-        let vm = this;
-        firebase
-          .auth()
-          .signInWithEmailAndPassword(this.email, this.password)
-          .then(
-            (user) => {
-              console.log(user);
-              alert("Login successful. Welcome back!");
-              localStorage.setItem("userLoggedIn", "true");
-              vm.$router.push("/");
-              // window.location.reload();
-            },
-            (err) => {
-              if (
-                err.code === "auth/user-not-found" ||
-                err.code === "auth/wrong-password"
-              ) {
-                alert("Email or password is incorrect. Please try again.");
-              } else if (err.code === "auth/too-many-requests") {
-                alert(
-                  "Too many failed login attempts. Please try again later."
-                );
-              } else if (err.code === "auth/invalid-credential") {
-                alert(
-                  "Invalid credentials. Please check your email and password."
-                );
-              } else {
-                console.log(err);
-                alert("An error occurred. Please try again later.");
-              }
-            }
-          );
-      } else {
-        alert("Please complete the CAPTCHA.");
+    initGeetest4(initGeetest4) {
+      if (!initGeetest4) {
+        console.error("initGeetest4 function is not available");
+        return;
       }
+
+      let web = this;
+      initGeetest4(
+        {
+          product: "bind",
+          captchaId: "d541f8dd4140b40e68d14dc68a69727c",
+        },
+        function (captchaObj) {
+          web.geetest = captchaObj;
+          captchaObj
+            .onReady(function () {})
+            .onSuccess(function () {})
+            .onError(function () {});
+
+          const button = document.getElementById("button_login");
+          button.addEventListener("click", function () {
+            captchaObj.showCaptcha();
+          });
+        }
+      );
+    },
+    login() {
+      let vm = this;
+      this.geetest.showBox((captchaResult) => {
+        if (captchaResult.success) {
+          firebase
+            .auth()
+            .signInWithEmailAndPassword(this.email, this.password)
+            .then(
+              (user) => {
+                console.log(user);
+                this.geetest.showBox();
+                alert("Login successful. Welcome back!");
+                localStorage.setItem("userLoggedIn", "true");
+                vm.$router.push("/");
+                // window.location.reload();
+              },
+              (err) => {
+                if (
+                  err.code === "auth/user-not-found" ||
+                  err.code === "auth/wrong-password"
+                ) {
+                  alert("Email or password is incorrect. Please try again.");
+                } else if (err.code === "auth/too-many-requests") {
+                  alert(
+                    "Too many failed login attempts. Please try again later."
+                  );
+                } else if (err.code === "auth/invalid-credential") {
+                  alert(
+                    "Invalid credentials. Please check your email and password."
+                  );
+                } else {
+                  console.log(err);
+                  alert("An error occurred. Please try again later.");
+                }
+              }
+            );
+        } else {
+          alert("Please complete the CAPTCHA correctly.");
+        }
+      });
     },
 
     signup() {
@@ -265,16 +265,23 @@ export default {
       this.showForgotPasswordForm = !this.showForgotPasswordForm;
     },
     renderRecaptcha() {
-      // Render reCAPTCHA widget
-      window.grecaptcha.ready(() => {
-        window.grecaptcha
-          .execute("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", {
-            action: "login",
-          })
-          .then(() => {
-            this.captchaVerified = true;
-          });
-      });
+      const script = document.createElement("script");
+      script.src =
+        "https://www.google.com/recaptcha/api.js?render=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        window.grecaptcha.ready(() => {
+          window.grecaptcha
+            .execute("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", {
+              action: "login",
+            })
+            .then(() => {
+              this.captchaVerified = true;
+            });
+        });
+      };
+      document.head.appendChild(script);
     },
   },
 };
