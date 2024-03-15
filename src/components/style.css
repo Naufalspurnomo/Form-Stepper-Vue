@@ -46,9 +46,14 @@ a {
   transform: translateZ(0);
   background: #1b2030 url("../assets/SANQUA-2.jpg") 100% 0 no-repeat;
   background-size: 100%;
-  animation: grow 25s linear 10ms infinite;
+  animation: grow 5s linear 10ms infinite;
   transition: all 0.4s ease-in-out;
   z-index: -2;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -ms-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-animation: grow 5s linear 10ms infinite;
 }
 .header a {
   color: #eee;
@@ -59,7 +64,11 @@ a {
     transform: scale(1) translateY(0px);
   }
   50% {
-    transform: scale(1.2) translateY(-200px);
+    transform: scale(1.2) translateY(-20px);
+    -webkit-transform: scale(1.2) translateY(-20px);
+    -moz-transform: scale(1.2) translateY(-20px);
+    -ms-transform: scale(1.2) translateY(-20px);
+    -o-transform: scale(1.2) translateY(-20px);
   }
 }
 #logoSide img {
@@ -200,11 +209,7 @@ a {
 .meta {
   font-style: italic;
 }
-.content {
-  padding-top: 5%;
-  text-align: justify;
-  margin: 20px 50px;
-}
+
 .vue3-multi-stepper {
   margin: 20px 30px;
 }
@@ -219,7 +224,7 @@ a {
 .container-form {
   display: flex;
   flex-direction: column;
-  margin: 30px 10px;
+  margin: 30px 0px;
 }
 .form-group {
   align-items: center;
@@ -240,6 +245,7 @@ select {
 label {
   font-weight: 600;
 }
+
 input,
 select,
 textarea {
@@ -446,4 +452,33 @@ table.table-hobi td:last-child {
 
 #pertanyaan td:nth-child(4) {
   width: 600px;
+}
+
+@media screen and (max-width: 600px) {
+  h2 {
+    font-size: 20px;
+  }
+  .header {
+    height: 300px;
+    width: 100%;
+  }
+  .header:before {
+    margin-top: 100px;
+    size: 200px;
+    animation: grow 5s infinite;
+    -webkit-animation: grow 5s infinite;
+  }
+
+  @keyframes grow {
+    0% {
+      transform: scale(1) translateY(0px);
+    }
+    50% {
+      transform: scale(1) translateY(-50px);
+      -webkit-transform: scale(1) translateY(-50px);
+      -moz-transform: scale(1) translateY(-50px);
+      -ms-transform: scale(1) translateY(-50px);
+      -o-transform: scale(1) translateY(-50px);
+    }
+  }
 }

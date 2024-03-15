@@ -30,7 +30,7 @@
               value="Login"
               class="btn solid"
               id="button_login"
-              @click.prevent="login"
+              @click.prevent="loginWithCaptcha"
             >
               Login
             </button>
@@ -168,56 +168,49 @@ export default {
           web.geetest = captchaObj;
           captchaObj
             .onReady(function () {})
-            .onSuccess(function () {})
+            .onSuccess(function () {
+              web.login();
+            })
             .onError(function () {});
-
-          const button = document.getElementById("button_login");
-          button.addEventListener("click", function () {
-            captchaObj.showCaptcha();
-          });
         }
       );
     },
+
+    loginWithCaptcha() {
+      if (!this.geetest) {
+        console.error("ERROR");
+        return;
+      }
+      this.geetest.showBox();
+
+      this.geetest.onSuccess(() => {});
+    },
+
     login() {
-      let vm = this;
-      this.geetest.showBox((captchaResult) => {
-        if (captchaResult.success) {
-          firebase
-            .auth()
-            .signInWithEmailAndPassword(this.email, this.password)
-            .then(
-              (user) => {
-                console.log(user);
-                this.geetest.showBox();
-                alert("Login successful. Welcome back!");
-                localStorage.setItem("userLoggedIn", "true");
-                vm.$router.push("/");
-                // window.location.reload();
-              },
-              (err) => {
-                if (
-                  err.code === "auth/user-not-found" ||
-                  err.code === "auth/wrong-password"
-                ) {
-                  alert("Email or password is incorrect. Please try again.");
-                } else if (err.code === "auth/too-many-requests") {
-                  alert(
-                    "Too many failed login attempts. Please try again later."
-                  );
-                } else if (err.code === "auth/invalid-credential") {
-                  alert(
-                    "Invalid credentials. Please check your email and password."
-                  );
-                } else {
-                  console.log(err);
-                  alert("An error occurred. Please try again later.");
-                }
-              }
-            );
-        } else {
-          alert("Please complete the CAPTCHA correctly.");
-        }
-      });
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          console.log(user);
+          alert("Login successful. Welcome back!");
+          localStorage.setItem("userLoggedIn", "true");
+          this.$router.push("/");
+        })
+        .catch((err) => {
+          if (
+            err.code === "auth/user-not-found" ||
+            err.code === "auth/wrong-password"
+          ) {
+            alert("Email or password is incorrect. Please try again.");
+          } else if (err.code === "auth/too-many-requests") {
+            alert("Too many failed login attempts. Please try again later.");
+          } else if (err.code === "auth/invalid-credential") {
+            alert("Invalid credentials. Please check your email and password.");
+          } else {
+            console.log(err);
+            alert("An error occurred. Please try again later.");
+          }
+        });
     },
 
     signup() {
@@ -264,25 +257,25 @@ export default {
     toggleForgotPasswordForm() {
       this.showForgotPasswordForm = !this.showForgotPasswordForm;
     },
-    renderRecaptcha() {
-      const script = document.createElement("script");
-      script.src =
-        "https://www.google.com/recaptcha/api.js?render=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        window.grecaptcha.ready(() => {
-          window.grecaptcha
-            .execute("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", {
-              action: "login",
-            })
-            .then(() => {
-              this.captchaVerified = true;
-            });
-        });
-      };
-      document.head.appendChild(script);
-    },
+    // renderRecaptcha() {
+    //   const script = document.createElement("script");
+    //   script.src =
+    //     "https://www.google.com/recaptcha/api.js?render=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
+    //   script.async = true;
+    //   script.defer = true;
+    //   script.onload = () => {
+    //     window.grecaptcha.ready(() => {
+    //       window.grecaptcha
+    //         .execute("6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI", {
+    //           action: "login",
+    //         })
+    //         .then(() => {
+    //           this.captchaVerified = true;
+    //         });
+    //     });
+    //   };
+    //   document.head.appendChild(script);
+    // },
   },
 };
 </script>

@@ -341,23 +341,18 @@ export default {
     },
     step1Check() {
       if (
-        !this.pekerjaan ||
+        ![...this.pekerjaan] ||
         !this.nama_lengkap ||
         !this.alamat ||
         !this.telepon ||
         !this.jenis_kelamin ||
-        !this.tinggi_badan ||
-        !this.berat_badan ||
         !this.agama ||
         !this.kebangsaan ||
         !this.tempat_lahir ||
         !this.lahir ||
         !this.status_perkawinan ||
-        !this.golongan_darah ||
         !this.nomor_ktp ||
-        !this.nomor_sim ||
-        !this.status_rumah_tinggal ||
-        !this.kendaraan
+        !this.nomor_sim
       ) {
         this.nextClicked = true;
         alert("Silakan isi kelengkapan Anda.");
@@ -367,9 +362,35 @@ export default {
       }
     },
     step2Check() {
-      return true;
+      if (
+        this.riwayatPendidikan.length === 0 ||
+        this.keluarga.length === 0 ||
+        // this.kursus_training.length === 0 ||
+        this.pengetahuanBahasa.length === 0 ||
+        // this.kegiatanSosial.length === 0 ||
+        !this.hobiKegiatanLuang.kegiatan ||
+        !this.hobiKegiatanLuang.frekuensiBaca ||
+        !this.hobiKegiatanLuang.pokokBaca 
+        // !this.hobiKegiatanLuang.suratKabar ||
+        // !this.hobiKegiatanLuang.majalah
+      ) {
+        this.nextClicked = true;
+        alert("Silahkan isi kelengkapan Anda.");
+        return true;
+      } else {
+        return true;
+      }
     },
     step3Check() {
+      // if (
+      //   this.riwayatPekerjaan.length === 0 ||
+      //   this.referensiKontakKenalan.length === 0 ||
+      //   this.uraianTugasTanggungJawab.length === 0
+      // ) {
+      //   this.nextClicked = true;
+      //   alert("Silahkan isi kelengkapan Anda.");
+      //   return true;
+      // }
       return true;
     },
     step4Check() {

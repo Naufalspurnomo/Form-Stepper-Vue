@@ -73,7 +73,7 @@
       <div class="container-form">
         <h2>Data Diri</h2>
         <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked && !pekerjaan }">
-          <label for="pekerjaan">Pekerjaan Yang Dilamar</label>
+          <label for="pekerjaan">Pekerjaan Yang Dilamar *</label>
           <input
             type="text"
             id="pekerjaan"
@@ -83,7 +83,7 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !nama_lengkap }">
-          <label for="nama_lengkap">Nama Lengkap</label>
+          <label for="nama_lengkap">Nama Lengkap *</label>
           <input
             type="text"
             id="nama_lengkap"
@@ -94,7 +94,7 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !alamat }">
-          <label for="alamat">Alamat Berdasarkan KTP</label>
+          <label for="alamat">Alamat Berdasarkan KTP *</label>
           <textarea
             id="alamat"
             v-model="alamat"
@@ -104,7 +104,7 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !telepon }">
-          <label for="telepon">Telepon</label>
+          <label for="telepon">Telepon *</label>
           <input
             type="text"
             id="telepon"
@@ -116,7 +116,7 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked && !jenis_kelamin }">
-          <label for="jenis_kelamin">Jenis Kelamin</label>
+          <label for="jenis_kelamin">Jenis Kelamin *</label>
           <select
             id="jenis_kelamin"
             v-model="jenis_kelamin"
@@ -128,7 +128,7 @@
         
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  !tinggi_badan }">
+        <div class="form-group" >
           <label for="tinggi_badan">Tinggi Badan (cm)</label>
           <input
             type="number"
@@ -137,7 +137,7 @@
             class="form-control"
           />
         </div>
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  !berat_badan }">
+        <div class="form-group" >
           <label for="berat_badan">Berat Badan (kg)</label>
           <input
             type="number"
@@ -148,21 +148,21 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  !agama }">
-          <label for="agama">Agama</label>
+          <label for="agama">Agama *</label>
           <input type="text" id="agama" v-model="agama" class="form-control" />
         </div>
 
        <div class="form-group" :class="{ 'has-error': nextClicked &&  !kebangsaan }">
-          <label for="countries">Kebangsaan</label>
+          <label for="countries">Kebangsaan *</label>
           <select id="countries" name="countries" v-model="kebangsaan" class="form-control">
-            <option value="" disabled>Select your country</option>
+            <option value="" disabled>Pilih Negara</option>
             <option v-for="(country, index) in countries" :key="index" :value="country.name.common">{{ country.name.common }}</option>  
           </select>  
         </div>
       
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  !tempat_lahir }">
-          <label for="tempat-lahir">Tempat Lahir</label>
+          <label for="tempat-lahir">Tempat Lahir *</label>
           <input
             type="text"
             id="tempat-lahir"
@@ -172,12 +172,12 @@
         </div>
         
         <div class="form-group" :class="{ 'has-error': nextClicked &&  !lahir }">
-          <label for="lahir">Tanggal Lahir</label>
+          <label for="lahir">Tanggal Lahir *</label>
           <input type="date" id="lahir" v-model="lahir" class="form-control" />
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  !status_perkawinan }">
-          <label for="status_perkawinan">Status Perkawinan</label>
+          <label for="status_perkawinan">Status Perkawinan *</label>
           <select
             id="status_perkawinan"
             v-model="status_perkawinan"
@@ -189,7 +189,7 @@
           </select>
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  !golongan_darah }">
+        <div class="form-group" >
           <label for="golongan_darah">Golongan Darah</label>
           <select
             id="golongan_darah"
@@ -204,7 +204,7 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  !nomor_ktp }">
-          <label for="nomor_ktp">Nomor KTP</label>
+          <label for="nomor_ktp">Nomor KTP *</label>
           <input
             type="number"
             id="nomor_ktp"
@@ -214,7 +214,7 @@
         </div>
 
         <div class="form-group" :class="{ 'has-error': nextClicked &&  !nomor_sim }">
-          <label for="nomor_sim">Nomor SIM</label>
+          <label for="nomor_sim">Nomor SIM *</label>
           <input
             type="number"
             id="nomor_sim"
@@ -223,7 +223,7 @@
           />
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  !status_rumah_tinggal }">
+        <div class="form-group" >
           <label for="status_rumah_tinggal">Status Rumah Tinggal</label>
           <select
             id="status_rumah_tinggal"
@@ -248,7 +248,7 @@
           />
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  !kendaraan }">
+        <div class="form-group" >
           <label for="kendaraan">Kendaraan</label>
           <input
             type="text"
@@ -259,7 +259,7 @@
           />
         </div>
 
-        <div class="uploadfoto">
+        <div class="uploadfoto" :class="{'has-error': nextClicked && !uploadedImage}  ">
           <div
             @dragenter.prevent="toggleActive"
             @dragleave.prevent="toggleActive"
@@ -292,10 +292,10 @@
       <div class="container-form">
         <!-- Step 2 Content -->
         <!-- RIWAYAT PENDIDIKAN -->
+        
         <div id="app">
           <h2>Riwayat Pendidikan Formal</h2>
-
-          <div class="table-responsive">
+          <div class="table-responsive" >
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -326,6 +326,8 @@
                       <option value="S3">S3</option>
                     </select>
                   </td>
+
+                  
                   <td>
                     <input type="text" v-model="riwayatPendidikan.nama_sekolah" />
                   </td>
@@ -341,19 +343,26 @@
                   </td>
                   <td>
                     <VueDatePicker 
-                    style="width:80px" 
+                    style="width:100px" 
                     v-model="riwayatPendidikan.tahunMasuk" 
                     year-picker 
                     :min-date="new Date('2000-01-01')"
                     :max-date="new Date('2024-12-31')"
+                    :year-range="[2000, 2040]"
+                    auto-apply
+                     :teleport="true"
                 />
                 
                   </td>
                   
                   <td>
-                   <VueDatePicker style="width:80px" v-model="riwayatPendidikan.tahunKeluar" year-picker 
+                   <VueDatePicker style="width:100px" v-model="riwayatPendidikan.tahunKeluar" year-picker 
                    :min-date="new Date('2000-01-01')"
-                   :max-date="new Date('2024-12-31')" />
+                   :max-date="new Date('2024-12-31')"
+                   :year-range="[2000, 2040]"
+                   auto-apply
+                    :teleport="true"
+                     />
                   </td>
                   <td>
                     <select v-model="riwayatPendidikan.status_kelulusan">
@@ -363,21 +372,21 @@
                     </select>
                   </td>
                 </tr>
-                <tr>
-                  <td>
-                    <button
-                      class="tambah"
-                      @click.stop="tambahPendidikan()"
-                    >
-                      +
-                    </button>
-                    <button @click.stop="hapusPendidikan()" class="hapus">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+               
               </tbody>
+             
+                <button
+                  class="tambah"
+                  @click.stop="tambahPendidikan()"
+                >
+                  +
+                </button>
+                <button @click.stop="hapusPendidikan()" class="hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+             
             </table>
+            
           </div>
         </div>
 
@@ -440,20 +449,17 @@
                   </td>
                 </tr>
 
-                <tr>
-                  <td>
-                    <button
-                      class="tambah"
-                      @click.stop="tambahKeluarga()"
-                    >
-                      +
-                    </button>
-                    <button @click.stop="hapusKeluarga()" class="hapus">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </td>
-                </tr>
+               
               </tbody>
+              <button
+              class="tambah"
+              @click.stop="tambahKeluarga()"
+            >
+              +
+            </button>
+            <button @click.stop="hapusKeluarga()" class="hapus">
+              <i class="fas fa-trash"></i>
+            </button>
             </table>
           </div>
         </div>
@@ -486,20 +492,16 @@
                 </tr>
               </tbody>
 
-              <tr>
-                <td>
-                  <button
-                    class="tambah"
-                    @click.stop="tambahKursus()"
-                    placeholder="Kursus"
-                  >
-                    +
-                  </button>
-                  <button @click.stop="hapusKursus(index)" class="hapus">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+              <button
+              class="tambah"
+              @click.stop="tambahKursus()"
+              placeholder="Kursus"
+            >
+              +
+            </button>
+            <button @click.stop="hapusKursus(index)" class="hapus">
+              <i class="fas fa-trash"></i>
+            </button>
             </table>
           </div>
         </div>
@@ -556,9 +558,7 @@
                 </tr>
               </tbody>
 
-              <tr>
-                <td>
-                  <button
+              <button
                     class="tambah"
                     @click.stop="tambahBahasa()"
                     placeholder="Bahasa"
@@ -568,8 +568,6 @@
                   <button @click.stop="hapusBahasa(index)" class="hapus">
                     <i class="fas fa-trash"></i>
                   </button>
-                </td>
-              </tr>
             </table>
           </div>
         </div>
@@ -600,20 +598,16 @@
                 </tr>
               </tbody>
 
-              <tr>
-                <td>
-                  <button
-                    class="tambah"
-                    @click.stop="tambahSosial()"
-                    placeholder="Sosial"
-                  >
-                    +
-                  </button>
-                  <button @click.stop="hapusSosial(index)" class="hapus">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+              <button
+              class="tambah"
+              @click.stop="tambahSosial()"
+              placeholder="Sosial"
+            >
+              +
+            </button>
+            <button @click.stop="hapusSosial(index)" class="hapus">
+              <i class="fas fa-trash"></i>
+            </button>
             </table>
           </div>
         </div>
@@ -718,21 +712,28 @@
                       <div class="form-group">
                         <label>Dari:</label>
                         <VueDatePicker 
-                        style="width:80px" 
+                        style="width:100px" 
                         v-model="riwayatPekerjaan.pekerjaan_dimulai" 
                         year-picker 
-                        :min-date="new Date('2000-01-01')"
-                        :max-date="new Date('2024-12-31')"
+                   :min-date="new Date('2000-01-01')"
+                   :max-date="new Date('2024-12-31')"
+                   :year-range="[2000, 2040]"
+                   auto-apply
+                    :teleport="true"
+                       
                     />
                       </div>
                       <div class="form-group">
                         <label>Sampai:</label>
                         <VueDatePicker 
-                        style="width:80px" 
+                        style="width:100px" 
                         v-model="riwayatPekerjaan.pekerjaan_selesai" 
                         year-picker 
                         :min-date="new Date('2000-01-01')"
                         :max-date="new Date('2024-12-31')"
+                        :year-range="[2000, 2040]"
+                        auto-apply
+                         :teleport="true"
                     />
                       </div>
                     </td>
@@ -832,20 +833,16 @@
                   </td>
                 </tbody>
               </div>
-              <tr>
-                <td>
-                  <button
-                    class="tambah"
-                    @click.stop="tambahRiwayat()"
-                    placeholder="Riwayat Pekerjaan"
-                  >
-                    +
-                  </button>
-                  <button @click.stop="hapusRiwayat(index)" class="hapus">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+              <button
+              class="tambah"
+              @click.stop="tambahRiwayat()"
+              placeholder="Riwayat Pekerjaan"
+            >
+              +
+            </button>
+            <button @click.stop="hapusRiwayat(index)" class="hapus">
+              <i class="fas fa-trash"></i>
+            </button>
               </table>
             
             </div>
@@ -879,20 +876,16 @@
                 </tr>
               </tbody>
 
-              <tr>
-                <td>
-                  <button
-                    class="tambah"
-                    @click.stop="tambahReferensi()"
-                    placeholder="Refensi"
-                  >
-                    +
-                  </button>
-                  <button @click.stop="hapusReferensi(index)" class="hapus">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
+              <button
+              class="tambah"
+              @click.stop="tambahReferensi()"
+              placeholder="Refensi"
+            >
+              +
+            </button>
+            <button @click.stop="hapusReferensi(index)" class="hapus">
+              <i class="fas fa-trash"></i>
+            </button>
             </table>
           </div>
         </div>
