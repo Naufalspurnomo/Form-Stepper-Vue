@@ -7,6 +7,13 @@ import "firebase/auth";
 import "firebase/compat/firestore";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { useToast } from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+const toast = useToast();
+
+// import { db } from "../main.js";
+// import client from "../server";
 
 export default {
   components: {
@@ -24,7 +31,7 @@ export default {
       dropdownOpen: false,
       formData: {},
       nextClicked: false,
-
+      snackbar: false,
       tabs: computed(() => {
         return [
           {
@@ -55,7 +62,7 @@ export default {
           },
         ];
       }),
-
+      doneText: "selesai",
       pekerjaan: "",
       nama_lengkap: "",
       alamat: "",
@@ -82,7 +89,7 @@ export default {
       gambaranStrukturPosisi: "",
       keluarga: [],
       riwayatPendidikan: [],
-      kursus_training: [],
+      kursusTraining: [],
       pengetahuanBahasa: [],
       kegiatanSosial: [],
       riwayatPekerjaan: [],
@@ -139,10 +146,29 @@ export default {
       this.tambahPendidikan();
     }
     if (this.keluarga.length === 0) {
-      this.tambahKeluarga();
+      this.keluarga.push({
+        hubungan_keluarga: "Ayah",
+        nama: "",
+        jenis_kelamin: "",
+        tanggal_lahir: "",
+        pendidikan_terakhir: "",
+        perusahaan_terakhir: "",
+        jabatan_terakhir: "",
+        keterangan: "",
+      });
+      this.keluarga.push({
+        hubungan_keluarga: "Ibu",
+        nama: "",
+        jenis_kelamin: "",
+        tanggal_lahir: "",
+        pendidikan_terakhir: "",
+        perusahaan_terakhir: "",
+        jabatan_terakhir: "",
+        keterangan: "",
+      });
     }
 
-    if (this.kursus_training.length === 0) {
+    if (this.kursusTraining.length === 0) {
       this.tambahKursus();
     }
 
@@ -184,6 +210,8 @@ export default {
     },
 
     async handleFormSubmission() {
+      const toast = useToast();
+      this.loading = true;
       const pertanyaanList = [...this.pertanyaanList];
       const jawaban = this.jawaban.map(({ ya, tidak, penjelasan }) => ({
         ya,
@@ -191,81 +219,141 @@ export default {
         penjelasan,
       }));
 
-      const formData = {
-        pekerjaan: this.pekerjaan || null,
-        nama_lengkap: this.nama_lengkap || null,
-        alamat: this.alamat || null,
-        telepon: this.telepon || null,
-        jenis_kelamin: this.jenis_kelamin || null,
-        tinggi_badan: this.tinggi_badan || null,
-        berat_badan: this.berat_badan || null,
-        agama: this.agama || null,
-        kebangsaan: this.kebangsaan || null,
-        tempat_lahir: this.tempat_lahir || null,
-        lahir: this.lahir || null,
-        status_perkawinan: this.status_perkawinan || null,
-        golongan_darah: this.golongan_darah || null,
-        nomor_ktp: this.nomor_ktp || null,
-        nomor_sim: this.nomor_sim || null,
-        status_rumah_tinggal: this.status_rumah_tinggal || null,
-        textRumahLainnya: this.textRumahLainnya || null,
-        kendaraan: this.kendaraan || null,
-        foto_data_diri: this.uploadedFile
-          ? {
-              nama: this.uploadedFile.name,
-              tipe: this.uploadedFile.type,
-            }
-          : null,
-        riwayatPendidikan: this.riwayatPendidikan.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        keluarga: this.keluarga.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        kursus_training: this.kursus_training.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        pengetahuanBahasa: this.pengetahuanBahasa.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        kegiatanSosial: this.kegiatanSosial.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        hobiKegiatanLuang: this.hobiKegiatanLuang || null,
-        riwayatPekerjaan: this.riwayatPekerjaan.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        referensiKontakKenalan: this.referensiKontakKenalan.filter((item) =>
-          Object.values(item).some((value) => value !== "")
-        ),
-        uraianTugasTanggungJawab: this.uraianTugasTanggungJawab || null,
-        pertanyaanList: [],
-        gambaranStrukturPosisi: this.uploadedFilePosisi
-          ? {
-              nama: this.uploadedFilePosisi.name,
-              tipe: this.uploadedFilePosisi.type,
-            }
-          : null,
-      };
+      const currentUser = firebase.auth().currentUser;
+      if (currentUser) {
+        try {
+          const userEmail = currentUser.email;
 
-      for (let i = 0; i < pertanyaanList.length; i++) {
-        formData.pertanyaanList.push({
-          pertanyaan: pertanyaanList[i],
-          jawaban: jawaban[i],
-        });
+          const formData = {
+            pekerjaan: this.pekerjaan || null,
+            nama_lengkap: this.nama_lengkap || null,
+            alamat: this.alamat || null,
+            telepon: this.telepon || null,
+            jenis_kelamin: this.jenis_kelamin || null,
+            tinggi_badan: this.tinggi_badan || null,
+            berat_badan: this.berat_badan || null,
+            agama: this.agama || null,
+            kebangsaan: this.kebangsaan || null,
+            tempat_lahir: this.tempat_lahir || null,
+            lahir: this.lahir || null,
+            status_perkawinan: this.status_perkawinan || null,
+            golongan_darah: this.golongan_darah || null,
+            nomor_ktp: this.nomor_ktp || null,
+            nomor_sim: this.nomor_sim || null,
+            status_rumah_tinggal: this.status_rumah_tinggal || null,
+            textRumahLainnya: this.textRumahLainnya || null,
+            kendaraan: this.kendaraan || null,
+            foto_data_diri: this.uploadedFile
+              ? {
+                  nama: this.uploadedFile.name,
+                  tipe: this.uploadedFile.type,
+                }
+              : null,
+            riwayatPendidikan: this.riwayatPendidikan.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            keluarga: this.keluarga.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            kursusTraining: this.kursusTraining.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            pengetahuanBahasa: this.pengetahuanBahasa.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            kegiatanSosial: this.kegiatanSosial.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            hobiKegiatanLuang: this.hobiKegiatanLuang || null,
+            riwayatPekerjaan: this.riwayatPekerjaan.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            referensiKontakKenalan: this.referensiKontakKenalan.filter((item) =>
+              Object.values(item).some((value) => value !== "")
+            ),
+            uraianTugasTanggungJawab: this.uraianTugasTanggungJawab || null,
+            pertanyaanList: [],
+            gambaranStrukturPosisi: this.uploadedFilePosisi
+              ? {
+                  nama: this.uploadedFilePosisi.name,
+                  tipe: this.uploadedFilePosisi.type,
+                }
+              : null,
+          };
+
+          // Menambahkan userEmail ke formData
+          const formDataWithUserEmail = {
+            ...formData,
+            userEmail: userEmail,
+          };
+
+          // Menambahkan jawaban pertanyaan ke formData
+          for (let i = 0; i < pertanyaanList.length; i++) {
+            formDataWithUserEmail.pertanyaanList.push({
+              pertanyaan: pertanyaanList[i],
+              jawaban: jawaban[i],
+            });
+          }
+
+          console.log(">>>>>>>> Data formulir before:", formDataWithUserEmail);
+
+          const cleanFormData = Object.fromEntries(
+            Object.entries(formDataWithUserEmail).filter(
+              ([, value]) => value != null
+            )
+          );
+
+          console.log(
+            ">>>>>>>> Data formulir yang akan dikirim:",
+            JSON.stringify(cleanFormData)
+          );
+
+          // Mengirimkan data formulir ke Firestore
+          // const docRef = await db.collection("formData").add(cleanFormData);
+          // console.log("ID ke Firebase: ", docRef.id);
+
+          const response = await fetch("http://localhost:3000/submitFormData", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          if (response.ok) {
+            console.log("Form data submitted successfully");
+            toast.success("Formulir berhasil disubmit!", {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: true,
+              hideProgressBar: true,
+              closeButton: "button",
+              icon: {
+                iconClass: "undefined",
+                iconChildren: "",
+                iconTag: "i",
+              },
+              rtl: false,
+            });
+            setTimeout(() => {
+              // window.location.reload();
+            }, 5000);
+          } else {
+            console.error("Failed to submit form data");
+          }
+        } catch (error) {
+          console.error("Error Form: ", error);
+        }
+      } else {
+        console.error("User belum login.");
       }
-
-      console.log(">>>>>>>> Data formulir before:", formData);
-
-      const cleanFormData = Object.fromEntries(
-        Object.entries(formData).filter(([, value]) => value != null)
-      );
-
-      console.log(
-        ">>>>>>>> Data formulir yang akan dikirim:",
-        JSON.stringify(cleanFormData)
-      );
     },
+
     toggleActive() {
       this.active = !this.active;
     },
@@ -311,11 +399,6 @@ export default {
       reader.readAsDataURL(file);
     },
 
-    handleStepChange(newStep, oldStep) {
-      if (newStep > oldStep) {
-        this.nextClicked = true;
-      }
-    },
     validateStep(step) {
       this.scrollToTop();
       if (step === 1) {
@@ -355,42 +438,106 @@ export default {
         !this.nomor_sim
       ) {
         this.nextClicked = true;
-        alert("Silakan isi kelengkapan Anda.");
+        toast.error("Silakan isi kelengkapan Anda.", {
+          position: "top-right",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: true,
+          hideProgressBar: false,
+          closeButton: "button",
+          icon: {
+            iconClass: "undefined",
+            iconChildren: "",
+            iconTag: "i",
+          },
+          rtl: false,
+        });
         return true;
       } else {
         return true;
       }
     },
     step2Check() {
+      const ayah = this.keluarga.find(
+        (entry) => entry.hubungan_keluarga === "Ayah"
+      );
+      const ibu = this.keluarga.find(
+        (entry) => entry.hubungan_keluarga === "Ibu"
+      );
+
       if (
-        this.riwayatPendidikan.length === 0 ||
-        this.keluarga.length === 0 ||
-        // this.kursus_training.length === 0 ||
-        this.pengetahuanBahasa.length === 0 ||
-        // this.kegiatanSosial.length === 0 ||
-        !this.hobiKegiatanLuang.kegiatan ||
-        !this.hobiKegiatanLuang.frekuensiBaca ||
-        !this.hobiKegiatanLuang.pokokBaca 
-        // !this.hobiKegiatanLuang.suratKabar ||
-        // !this.hobiKegiatanLuang.majalah
+        this.riwayatPendidikan.filter((entry) =>
+          Object.values(entry).some((value) => value !== "")
+        ).length === 0 ||
+        this.keluarga.filter((entry) =>
+          Object.values(entry).some((value) => value !== "")
+        ).length === 0 ||
+        this.pengetahuanBahasa.filter((entry) =>
+          Object.values(entry).some((value) => value !== "")
+        ).length === 0 ||
+        !ayah ||
+        !ibu
       ) {
         this.nextClicked = true;
-        alert("Silahkan isi kelengkapan Anda.");
-        return true;
-      } else {
+        toast.error(
+          "Silahkan isi kelengkapan Anda. Pastikan data Ayah dan Ibu terisi.",
+          {
+            position: "top-right",
+            timeout: 5000,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            draggable: true,
+            draggablePercent: 0.6,
+            showCloseButtonOnHover: true,
+            hideProgressBar: false,
+            closeButton: "button",
+            icon: {
+              iconClass: "undefined",
+              iconChildren: "",
+              iconTag: "i",
+            },
+            rtl: false,
+          }
+        );
         return true;
       }
+      return true;
     },
     step3Check() {
-      // if (
-      //   this.riwayatPekerjaan.length === 0 ||
-      //   this.referensiKontakKenalan.length === 0 ||
-      //   this.uraianTugasTanggungJawab.length === 0
-      // ) {
-      //   this.nextClicked = true;
-      //   alert("Silahkan isi kelengkapan Anda.");
-      //   return true;
-      // }
+      if (
+        this.riwayatPekerjaan.filter((entry) =>
+          Object.values(entry).some((value) => value !== "")
+        ).length === 0 ||
+        this.referensiKontakKenalan.filter((entry) =>
+          Object.values(entry).some((value) => value !== "")
+        ).length === 0
+      ) {
+        this.nextClicked = true;
+        toast.error("Silahkan isi kelengkapan Anda.", {
+          position: "top-right",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: true,
+          hideProgressBar: false,
+          closeButton: "button",
+          icon: {
+            iconClass: "undefined",
+            iconChildren: "",
+            iconTag: "i",
+          },
+          rtl: false,
+        });
+        return true;
+      }
       return true;
     },
     step4Check() {
@@ -424,8 +571,8 @@ export default {
         nama_sekolah: "",
         tempat_sekolah: "",
         jurusan_sekolah: "",
-        tahunMasuk: "",
-        tahunKeluar: "",
+        tahun_masuk: "",
+        tahun_keluar: "",
         status_kelulusan: "",
       });
     },
@@ -436,7 +583,7 @@ export default {
       }
     },
     tambahKursus() {
-      this.kursus_training.push({
+      this.kursusTraining.push({
         jenis_kursus: "",
         penyelenggara: "",
         lokasi: "",
@@ -448,7 +595,7 @@ export default {
     hapusKursus() {
       const konfirmasi = confirm("Apakah yakin ingin dihapus?");
       if (konfirmasi) {
-        this.kursus_training.pop();
+        this.kursusTraining.pop();
       }
     },
     tambahBahasa() {
@@ -485,16 +632,16 @@ export default {
       this.riwayatPekerjaan.push({
         pekerjaan_dimulai: "",
         pekerjaan_selesai: "",
-        namaPerusahaan: "",
-        alamatPerusahaan: "",
-        teleponPerusahaan: "",
-        jabatanAwal: "",
-        jabatanAkhir: "",
-        jenisUsaha: "",
-        jumlahKaryawan: "",
-        namaAtasanLangsung: "",
-        namaDirektur: "",
-        alasanBerhenti: "",
+        nama_perusahaan: "",
+        alamat_perusahaan: "",
+        telepon_perusahaan: "",
+        jabatan_awal: "",
+        jabatan_akhir: "",
+        jenis_usaha: "",
+        jumlah_karyawan: "",
+        nama_atasan: "",
+        nama_direktur: "",
+        alasan_berhenti: "",
       });
     },
     hapusRiwayat() {
@@ -506,7 +653,7 @@ export default {
     tambahReferensi() {
       this.referensiKontakKenalan.push({
         nama_kenalan: "",
-        alamatTelp: "",
+        alamat_telp: "",
         pekerjaan: "",
         hubungan: "",
       });
@@ -535,13 +682,23 @@ export default {
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
 
+    // const toast = useToast();
+
+    // const showToast = () => {
+    //   toast.success("Hello, world!", {
+    //     timeout: 2000,
+    //   });
+    // };
+
     return {
       getRootProps,
       getInputProps,
       ...rest,
       dropzoneFile,
+      // showToast,
     };
   },
+
   watch: {
     status_rumah_tinggal(newValue) {
       if (newValue === "Lainnya") {

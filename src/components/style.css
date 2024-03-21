@@ -457,6 +457,10 @@ table.table-hobi td:last-child {
 @media screen and (max-width: 600px) {
   h2 {
     font-size: 20px;
+    padding: 20px 0;
+  }
+  th {
+    font-size: 14px;
   }
   .header {
     height: 300px;
@@ -480,5 +484,21 @@ table.table-hobi td:last-child {
       -ms-transform: scale(1) translateY(-50px);
       -o-transform: scale(1) translateY(-50px);
     }
+  }
+
+  .uploadfoto,
+  .uploadgambar {
+    height: 200px;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table-responsive table {
+    font-size: 12px;
+  }
+  .table-responsive th,
+  .table-responsive td {
+    padding: 8px;
   }
 }

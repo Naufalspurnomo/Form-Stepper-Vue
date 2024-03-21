@@ -55,6 +55,7 @@
     </div>
   </div>
 
+  <div>
   <Vue3MultiStepper
     v-model:step="step"
     :tabs="tabs"
@@ -62,12 +63,14 @@
     primaryColor2="#F2E6E8"
     backText="Kembali"
     nextText="Lanjut"
-    doneText="Selesai"
+    :doneText="doneText"
     :loading="loading"
     :finalize="handleFormSubmission"
     :validateStep="validateStep"
     class="vue3-multi-stepper"
   >
+
+  
     <template #1
       ><!-- Step 1 Content -->
       <div class="container-form">
@@ -294,7 +297,7 @@
         <!-- RIWAYAT PENDIDIKAN -->
         
         <div id="app">
-          <h2>Riwayat Pendidikan Formal</h2>
+          <h2>Riwayat Pendidikan Formal *</h2>
           <div class="table-responsive" >
             <table class="table table-bordered">
               <thead>
@@ -344,7 +347,7 @@
                   <td>
                     <VueDatePicker 
                     style="width:100px" 
-                    v-model="riwayatPendidikan.tahunMasuk" 
+                    v-model="riwayatPendidikan.tahun_masuk" 
                     year-picker 
                     :min-date="new Date('2000-01-01')"
                     :max-date="new Date('2024-12-31')"
@@ -356,7 +359,7 @@
                   </td>
                   
                   <td>
-                   <VueDatePicker style="width:100px" v-model="riwayatPendidikan.tahunKeluar" year-picker 
+                   <VueDatePicker style="width:100px" v-model="riwayatPendidikan.tahun_keluar" year-picker 
                    :min-date="new Date('2000-01-01')"
                    :max-date="new Date('2024-12-31')"
                    :year-range="[2000, 2040]"
@@ -392,7 +395,7 @@
 
         <!-- SUSUNAN KELUARGA -->
         <div id="app">
-          <h2>Susunan Keluarga</h2>
+          <h2>Susunan Keluarga *</h2>
 
           <div class="table-responsive">
             <table class="table table-bordered">
@@ -482,13 +485,13 @@
               </thead>
 
               <tbody>
-                <tr v-for="(kursus_training, index) in kursus_training" :key="index">
-                  <td><input type="text" v-model="kursus_training.jenis_kursus" /></td>
-                  <td><input type="text" v-model="kursus_training.penyelenggara" /></td>
-                  <td><input type="text" v-model="kursus_training.lokasi" /></td>
-                  <td><input type="text" v-model="kursus_training.lama_kursus" /></td>
-                  <td><input type="number" v-model="kursus_training.tahun_mulai_kursus" /></td>
-                  <td><input type="text" v-model="kursus_training.biaya_kursus" /></td>
+                <tr v-for="(kursusTraining, index) in kursusTraining" :key="index">
+                  <td><input type="text" v-model="kursusTraining.jenis_kursus" /></td>
+                  <td><input type="text" v-model="kursusTraining.penyelenggara" /></td>
+                  <td><input type="text" v-model="kursusTraining.lokasi" /></td>
+                  <td><input type="text" v-model="kursusTraining.lama_kursus" /></td>
+                  <td><input type="number" v-model="kursusTraining.tahun_mulai_kursus" /></td>
+                  <td><input type="text" v-model="kursusTraining.biaya_kursus" /></td>
                 </tr>
               </tbody>
 
@@ -508,7 +511,7 @@
 
         <!-- PENGETAHUAN BAHASA -->
         <div id="app">
-          <h2>Pengetahuan Bahasa</h2>
+          <h2>Pengetahuan Bahasa *</h2>
 
           <div class="table-responsive">
             <table class="table table-bordered">
@@ -743,7 +746,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.namaPerusahaan"
+                          v-model="riwayatPekerjaan.nama_perusahaan"
                           required
                         />
                       </div>
@@ -752,7 +755,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.alamatPerusahaan"
+                          v-model="riwayatPekerjaan.alamat_perusahaan"
                         />
                       </div>
                       <div class="form-group">
@@ -760,7 +763,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.teleponPerusahaan"
+                          v-model="riwayatPekerjaan.telepon_perusahaan"
                         />
                       </div>
                     </td>
@@ -770,7 +773,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.jabatanAwal"
+                          v-model="riwayatPekerjaan.jabatan_awal"
                           required
                         />
                       </div>
@@ -779,7 +782,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.jabatanAkhir"
+                          v-model="riwayatPekerjaan.jabatan_akhir"
                           required
                         />
                       </div>
@@ -790,7 +793,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.jenisUsaha"
+                          v-model="riwayatPekerjaan.jenis_usaha"
                           required
                         />
                       </div>
@@ -799,7 +802,7 @@
                         <input
                           type="number"
                           class="form-control"
-                          v-model="riwayatPekerjaan.jumlahKaryawan"
+                          v-model="riwayatPekerjaan.jumlah_karyawan"
                           required
                         />
                       </div>
@@ -808,7 +811,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.namaAtasanLangsung"
+                          v-model="riwayatPekerjaan.nama_atasan"
                           required
                         />
                       </div>
@@ -817,7 +820,7 @@
                         <input
                           type="text"
                           class="form-control"
-                          v-model="riwayatPekerjaan.namaDirektur"
+                          v-model="riwayatPekerjaan.nama_direktur"
                           required
                         />
                       </div>
@@ -828,7 +831,7 @@
                     <textarea
                       name="alasan_berhenti"
                       style="width: 100%; height: 150px"
-                      v-model="riwayatPekerjaan.alasanBerhenti"
+                      v-model="riwayatPekerjaan.alasan_berhenti"
                     ></textarea>
                   </td>
                 </tbody>
@@ -870,7 +873,7 @@
               <tbody>
                 <tr v-for="(referensiKontakKenalan, index) in referensiKontakKenalan" :key="index">
                   <td><input type="text" v-model="referensiKontakKenalan.nama_kenalan" /></td>
-                  <td><input type="text" v-model="referensiKontakKenalan.alamatTelp" /></td>
+                  <td><input type="text" v-model="referensiKontakKenalan.alamat_telp" /></td>
                   <td><input type="text" v-model="referensiKontakKenalan.pekerjaan" /></td>
                   <td><input type="text" v-model="referensiKontakKenalan.hubungan" /></td>
                 </tr>
@@ -986,6 +989,10 @@
       </div>
     </template>
   </Vue3MultiStepper>
+  <!-- <div>
+    <button @click="showToast">Show Toast</button>
+  </div> -->
+</div>
 </template>
 
 <style scoped src="../components/style.css"> </style>
