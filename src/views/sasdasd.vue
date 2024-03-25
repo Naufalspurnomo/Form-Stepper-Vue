@@ -171,7 +171,7 @@
             ref="statusRumahLainnya"
             v-if="status_rumah_tinggal === 'Lainnya'"
             type="text"
-            v-model="textRumahLainnya"
+            v-model="status_rumah"
             class="form-control mt-2"
             placeholder="Tuliskan status rumah tinggal lainnya"
           />

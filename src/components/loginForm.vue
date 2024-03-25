@@ -34,9 +34,9 @@
             >
               Login
             </button>
-            <p class="social-text">Or Sign in with social platforms</p>
+            <p class="social-text">━━ Or Sign in with social platforms ━━</p>
             <div class="social-media">
-              <a href="#" class="social-icon" @click="googleLogin">
+              <a href="#" class="social-icon" @click="loginGoogleWithCaptcha">
                 <i class="fab fa-google"></i>
               </a>
             </div>
@@ -70,7 +70,7 @@
             >
               Sign Up
             </button>
-            <p class="social-text">Or Sign up with social platforms</p>
+            <p class="social-text">━━ Or Sign up with social platforms ━━</p>
             <div class="social-media">
               <a href="#" class="social-icon">
                 <i class="fab fa-google"></i>
@@ -82,25 +82,19 @@
       <div class="panels-container">
         <div class="panel left-panel">
           <div class="content">
-            <h3>New here ?</h3>
-            <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
-              ex ratione. Aliquid!
-            </p>
-            <button class="btn transparent" id="sign-up-btn">Sign up</button>
+            <button class="btn transparent" id="sign-up-btn">
+              <i class="fas fa-user-plus"></i> Sign up
+            </button>
           </div>
-          <img src="" class="image" alt="" />
+          <img src="../assets/loginlogo.svg" class="image" alt="" />
         </div>
         <div class="panel right-panel">
           <div class="content">
-            <h3>One of us ?</h3>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
-              laboriosam ad deleniti.
-            </p>
-            <button class="btn transparent" id="sign-in-btn">Sign in</button>
+            <button class="btn transparent" id="sign-in-btn">
+              <i class="fa fa-user"></i> Login
+            </button>
           </div>
-          <img src="" class="image" alt="" />
+          <img src="../assets/signuplogo.svg" class="image" alt="" />
         </div>
       </div>
     </div>
@@ -184,6 +178,17 @@ export default {
       this.geetest.showBox();
 
       this.geetest.onSuccess(() => {});
+    },
+
+    loginGoogleWithCaptcha() {
+      if (!this.geetest) {
+        console.error("ERROR");
+        return;
+      }
+      this.geetest.showBox();
+      this.geetest.onSuccess(() => {
+        this.googleLogin();
+      });
     },
 
     login() {

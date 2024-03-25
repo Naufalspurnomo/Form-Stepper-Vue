@@ -4,7 +4,7 @@
       <div class="main-header">
         <div class="logo">
           <img src="../assets/pt_sanqua_cover.jpg" alt="Logo" />
-          <img src="../assets/pt_sanqu_cover2.jpg" alt="Logo" />
+          <!-- <img src="../assets/pt_sanqu_cover2.jpg" alt="Logo" /> -->
         </div>
         <div class="header-akun">
           <div class="dropdown">
@@ -24,11 +24,29 @@
         
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" v-show="dropdownOpen">
               <li v-if="isLoggedIn">
-                <a class="dropdown-item" @click.prevent="logout">Keluar Akun</a>
+                <a class="dropdown-item" @click.prevent="showConfirmationDialog = true">Keluar Akun</a>
               </li>
               <li v-else>
-                <router-link class="dropdown-item" :to="{ name: 'Login' }">Masuk Akun</router-link>
+                <router-link class="dropdown-item" :to="{ name: 'Login' }"></router-link>
               </li>
+          
+              <!-- Konfirmasi dialog -->
+              <transition name="fade">
+                <div v-if="showConfirmationDialog" class="confirmation-dialog">
+                  <div class="confirmation-dialog-header">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h2>ALERT</h2>
+                    <span class="close-icon" @click="showConfirmationDialog = false">&times;</span>
+                  </div>
+                  <div class="confirmation-dialog-content">
+                    <p>Apakah Anda yakin ingin keluar?</p>
+                    <div class="button-container">
+                      <button @click="logout" class="confirm-btn">Ya</button>
+                      <button @click="showConfirmationDialog = false" class="cancel-btn">Tidak</button>
+                    </div>
+                  </div>
+                </div>
+              </transition>
             </ul>
           </div>
         </div>
@@ -75,7 +93,7 @@
       ><!-- Step 1 Content -->
       <div class="container-form">
         <h2>Data Diri</h2>
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked && !pekerjaan }">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&   !pekerjaan }">
           <label for="pekerjaan">Pekerjaan Yang Dilamar *</label>
           <input
             type="text"
@@ -85,7 +103,7 @@
           />
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !nama_lengkap }">
+        <div class="form-group" :class="{ 'has-error': nextClicked &&  !nama_lengkap }">
           <label for="nama_lengkap">Nama Lengkap *</label>
           <input
             type="text"
@@ -96,7 +114,7 @@
          
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !alamat }">
+        <div class="form-group" :class="{ 'has-error': nextClicked && !alamat }">
           <label for="alamat">Alamat Berdasarkan KTP *</label>
           <textarea
             id="alamat"
@@ -106,7 +124,7 @@
          
         </div>
 
-        <div class="form-group" :class="{ 'has-error': nextClicked &&  nextClicked  && !telepon }">
+        <div class="form-group" :class="{ 'has-error': nextClicked  && !telepon }">
           <label for="telepon">Telepon *</label>
           <input
             type="text"
@@ -245,7 +263,7 @@
             ref="statusRumahLainnya"
             v-if="status_rumah_tinggal === 'Lainnya'"
             type="text"
-            v-model="textRumahLainnya"
+            v-model="status_rumah"
             class="form-control mt-2"
             placeholder="Tuliskan status rumah tinggal lainnya"
           />
@@ -262,6 +280,7 @@
           />
         </div>
 
+        <form action="http://localhost:3000/upload/datadiri" method="post" enctype="multipart/form-data">
         <div class="uploadfoto" :class="{'has-error': nextClicked && !uploadedImage}  ">
           <div
             @dragenter.prevent="toggleActive"
@@ -274,11 +293,14 @@
             <label for="dropzone">Upload Foto Diri</label>
             <input
               type="file"
+              accept="image/*"
+              name="datadiri"
               id="dropzoneFile"
               class="dropzoneFile"
               ref="fileInput"
               @change="fotoDataDiri"
             />
+            <input type="submit" value="upload">
           </div>
           <img
             id="uploadedImage"
@@ -286,7 +308,7 @@
             :src="uploadedImageUrl"
           />
         </div>
-
+      </form>
         
       </div>
     </template>
@@ -317,7 +339,7 @@
               <tbody>
                 <tr v-for="(riwayatPendidikan, index) in riwayatPendidikan" :key="index">
                   <td>
-                    <select v-model="riwayatPendidikan.tingkat_pendidikan">
+                    <select v-model="riwayatPendidikan.tingkat_pendidikan" >
                       <option value="SD/Sederajat">SD/Sederajat</option>
                       <option value="SMP/Sederajat">SMP/Sederajat</option>
                       <option value="SMA/Sederajat">SMA/Sederajat</option>
@@ -332,15 +354,15 @@
 
                   
                   <td>
-                    <input type="text" v-model="riwayatPendidikan.nama_sekolah" />
+                    <input type="text" v-model="riwayatPendidikan.nama_sekolah"  />
                   </td>
                   <td>
-                    <input type="text" v-model="riwayatPendidikan.tempat_sekolah" />
+                    <input type="text" v-model="riwayatPendidikan.tempat_sekolah"  />
                   </td>
                   <td>
                     <input
                       type="text"
-                      v-model="riwayatPendidikan.jurusan_sekolah"
+                      v-model="riwayatPendidikan.jurusan_sekolah" 
                       placeholder=""
                     />
                   </td>
@@ -368,7 +390,7 @@
                      />
                   </td>
                   <td>
-                    <select v-model="riwayatPendidikan.status_kelulusan">
+                    <select v-model="riwayatPendidikan.status_kelulusan" >
                       <option value="Lulus">Lulus</option>
                       <option value="Tidak">Tidak Lulus</option>
                       <option value="Belum">Belum Lulus</option>
