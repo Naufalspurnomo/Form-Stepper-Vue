@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const pg = require("pg");
 const fs = require("fs-extra");
 const app = express();
-
+const path = require("path");
 const multer = require("multer");
 const port = 3000;
 
@@ -34,21 +34,33 @@ const client = new pg.Client({
 client.connect();
 
 app.use(express.static("public"));
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/datadiri");
+    cb(null, "uploads/");
   },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
 
-app.post("/upload/datadiri", upload.single("datadiri"), (req, res) => {
-  if (req.file) {
-    // alert("Foto terupload");
-  }
+  filename: function (req, file, cb) {
+    const fieldName = file.fieldname;
+    const fileName = `${fieldName}-${file.originalname}`;
+    cb(null, fileName);
+  },
 });
+
+const upload = multer({ storage: storage });
+const multipleUpload = upload.fields([
+  { name: "datadiri" },
+  { name: "gambaranposisi" },
+]);
+
+
+app.post("/uploads", multipleUpload, (req, res) => {
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send("No files uploaded.");
+  }
+  res.send("Files uploaded successfully.");
+});
+
 
 app.post("/submitFormData", (req, res) => {
   const formData = req.body;
@@ -67,6 +79,32 @@ app.post("/submitFormData", (req, res) => {
       }
     }
   );
+});
+
+app.get("/formData", (req, res) => {
+  client.query("SELECT * FROM formdata", (err, result) => {
+    if (err) {
+      console.error("Error fetching data:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.json(result.rows);
+    }
+  });
+});
+
+app.get("/uploads/:fileName", (req, res) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join(__dirname, "uploads", fileName);
+
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.error("Error reading image file:", err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.writeHead(200, { "Content-Type": "image/jpeg" });
+      res.end(data);
+    }
+  });
 });
 
 app.listen(port, () => {

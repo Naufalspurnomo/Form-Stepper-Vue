@@ -280,7 +280,7 @@
           />
         </div>
 
-        <form action="http://localhost:3000/upload/datadiri" method="post" enctype="multipart/form-data">
+        <form @submit.prevent enctype="multipart/form-data">
         <div class="uploadfoto" :class="{'has-error': nextClicked && !uploadedImage}  ">
           <div
             @dragenter.prevent="toggleActive"
@@ -299,8 +299,9 @@
               class="dropzoneFile"
               ref="fileInput"
               @change="fotoDataDiri"
+             
             />
-            <input type="submit" value="upload">
+          
           </div>
           <img
             id="uploadedImage"
@@ -933,7 +934,9 @@
             Gambarkan Posisi Pada Struktur Organisasi Tempat Terakhir Anda
             Bekerja
           </h2>
-          <div class="uploadgambar">
+
+          <form @submit.prevent enctype="multipart/form-data">
+          <div class="uploadgambar" :class="{'has-error': nextClicked && !uploadedImage}  ">
             <div
             @dragenter.prevent="toggleActivePosisi"
             @dragleave.prevent="toggleActivePosisi"
@@ -942,9 +945,11 @@
             :class="{ 'active-dropzone': activePosisi }"
             class="dropzone"
           >
-            <label for="dropzonePosisi">Upload Gambar Posisi</label>
+            <label for="dropzonePosisi">Upload Gambaran Posisi</label>
             <input
               type="file"
+              accept="image/*"
+              name="gambaranposisi"
               id="dropzoneFilePosisi"
               class="dropzoneFile"
               ref="fileInputPosisi"
@@ -957,6 +962,7 @@
             :src="uploadedImageUrlPosisi"
           />
           </div>
+          </form>
         </div>
       </div>
     </template>

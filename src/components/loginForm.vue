@@ -7,12 +7,7 @@
             <h2 class="title">Sign in</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
-              <input
-                type="email"
-                id="email-signin"
-                v-model="email"
-                placeholder="Email"
-              />
+              <input type="email" v-model="email" placeholder="Email" />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
@@ -41,16 +36,12 @@
               </a>
             </div>
           </form>
+
           <form action="#" class="sign-up-form" @submit.prevent>
             <h2 class="title">Sign up</h2>
             <div class="input-field">
               <i class="fas fa-envelope"></i>
-              <input
-                type="email"
-                id="email-signup"
-                v-model="email"
-                placeholder="Email"
-              />
+              <input type="email" v-model="email" placeholder="Email" />
             </div>
             <div class="input-field">
               <i class="fas fa-lock"></i>
@@ -64,14 +55,17 @@
             <button
               type="submit"
               class="btn"
-              value="Sign up"
+              v-bind:value="signupButtonText"
               id="button_signup"
-              @click.prevent="signup"
+              @click.prevent="signupButton"
             >
-              Sign Up
+              {{ signupButtonText }}
             </button>
-            <p class="social-text">━━ Or Sign up with social platforms ━━</p>
-            <div class="social-media">
+
+            <p class="social-text" v-if="showSocialMedia">
+              ━━ Or Sign up with social platforms ━━
+            </p>
+            <div class="social-media" v-if="showSocialMedia">
               <a href="#" class="social-icon">
                 <i class="fab fa-google"></i>
               </a>
@@ -108,6 +102,10 @@
 import firebase from "firebase/compat/app";
 import "firebase/auth";
 import "firebase/compat/firestore";
+import { useToast } from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+const toast = useToast();
 
 // import { gsap } from "gsap";
 
@@ -119,6 +117,9 @@ export default {
       password: "",
       captchaVerified: false,
       showForgotPasswordForm: false,
+      signupButtonText: "Sign Up",
+      signupButton: this.signup,
+      showSocialMedia: true,
       geetest: "",
     };
   },
@@ -195,25 +196,81 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
-        .then((user) => {
-          console.log(user);
-          alert("Login successful. Welcome back!");
-          localStorage.setItem("userLoggedIn", "true");
-          this.$router.push("/");
+        .then((userCredential) => {
+          console.log(userCredential);
+          const user = userCredential.user;
+          if (user && user.emailVerified) {
+            toast.success("Login sukses, selamat datang kembali!", {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: true,
+              hideProgressBar: true,
+              closeButton: "button",
+              icon: "fa fa-id-badge",
+              rtl: false,
+            });
+            localStorage.setItem("userLoggedIn", "true");
+            this.$router.push("/");
+          } else {
+            toast.error("Verifikasi Email terlebih dahulu!", {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: true,
+              hideProgressBar: false,
+              closeButton: "button",
+              icon: "fa fa-exclamation-circle",
+              rtl: false,
+            });
+          }
         })
         .catch((err) => {
           if (
             err.code === "auth/user-not-found" ||
-            err.code === "auth/wrong-password"
+            err.code === "auth/wrong-password" ||
+            err.code === "auth/invalid-credential" ||
+            err.code === "auth/missing-password"
           ) {
-            alert("Email or password is incorrect. Please try again.");
+            toast.error("Error, Password / Email salah!", {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: true,
+              hideProgressBar: false,
+              closeButton: "button",
+              icon: "fa fa-exclamation-circle",
+              rtl: false,
+            });
           } else if (err.code === "auth/too-many-requests") {
-            alert("Too many failed login attempts. Please try again later.");
-          } else if (err.code === "auth/invalid-credential") {
-            alert("Invalid credentials. Please check your email and password.");
+            toast.error("Error, terlalu banyak aksi, coba lagi nanti!", {
+              position: "top-right",
+              timeout: 5000,
+              closeOnClick: true,
+              pauseOnFocusLoss: true,
+              pauseOnHover: true,
+              draggable: true,
+              draggablePercent: 0.6,
+              showCloseButtonOnHover: true,
+              hideProgressBar: false,
+              closeButton: "button",
+              icon: "fa fa-exclamation-circle",
+              rtl: false,
+            });
           } else {
             console.log(err);
-            alert("An error occurred. Please try again later.");
           }
         });
     },
@@ -223,21 +280,67 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(
-          (user) => {
-            console.log(user);
-            alert("Account created successfully. You are now logged in.");
+          (userCredential) => {
+            userCredential.user.sendEmailVerification();
+
+            firebase.auth().onAuthStateChanged((user) => {
+              if (user && user.emailVerified) {
+                window.location.reload();
+              }
+            });
+
+            this.signupButtonText = "Cek Email Anda";
+            this.signupButton = this.checkEmail;
+
+            this.showSocialMedia = false;
+
+            toast.success(
+              "Email berhasil dibuat, silakan verifikasi akun Anda!",
+              {
+                position: "top-right",
+                timeout: 5000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: true,
+                hideProgressBar: true,
+                closeButton: "button",
+                icon: "fa fa-id-badge",
+                rtl: false,
+              }
+            );
           },
-          (err) => {
-            // Handle error here
-            if (err.code === "auth/email-already-in-use") {
-              alert("Email is already in use. Please use a different email.");
+          (error) => {
+            if (error.code === "auth/email-already-in-use") {
+              toast.error("Error, Email sudah digunakan!", {
+                position: "top-right",
+                timeout: 5000,
+                closeOnClick: true,
+                pauseOnFocusLoss: true,
+                pauseOnHover: true,
+                draggable: true,
+                draggablePercent: 0.6,
+                showCloseButtonOnHover: true,
+                hideProgressBar: false,
+                closeButton: "button",
+                icon: "fa fa-exclamation-circle",
+                rtl: false,
+              });
             } else {
-              // Menampilkan pesan kesalahan umum
-              console.log(err);
-              alert("An error occurred. Please try again later.");
+              console.error(error);
             }
           }
         );
+    },
+    checkEmail() {
+      const user = firebase.auth().currentUser;
+      if (user && user.emailVerified) {
+        window.location.reload();
+      } else {
+        window.open("https://mail.google.com/mail/u/0/#inbox", "_blank");
+      }
     },
     googleLogin() {
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -248,14 +351,14 @@ export default {
         .then((result) => {
           var user = result.user;
           console.log(user);
-          alert("Login successful. Welcome back!");
+          alert("Login sukses, selamat datang kembali!");
           localStorage.setItem("userLoggedIn", "true");
           this.$router.push("/");
         })
         .catch((error) => {
           console.error(error);
           alert(
-            "An error occurred during Google login. Please try again later."
+            "Terjadi kesalahan saat login Google. Silakan coba lagi nanti."
           );
         });
     },

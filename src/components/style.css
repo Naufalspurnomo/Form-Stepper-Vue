@@ -451,6 +451,7 @@ input[type="file"] {
 }
 .table-responsive {
   overflow-x: auto;
+  margin: 20px 0;
 }
 
 .table {
